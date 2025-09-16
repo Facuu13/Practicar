@@ -10,7 +10,6 @@ client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 client.connect(broker_address)
 client.publish("greenhouse/sensors/dev001/status", "online",0,True) #qos 0, retain True
 
-
 while True:
     #publicar un valor de temperatura aleatorio entre 18 y 30
     #  y humedad entre 30 y 70 
