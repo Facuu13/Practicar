@@ -1,36 +1,36 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-
-# Datos simulados (como en Node.js)
-READINGS = [
-    {"device_id": "dev001", "ts_utc": "2024-06-01T10:00:00Z", "temp_c": 22.5, "hum_pct": 45.0},
-    {"device_id": "dev001", "ts_utc": "2024-06-01T11:00:00Z", "temp_c": 23.0, "hum_pct": 50.0},
-    {"device_id": "dev001", "ts_utc": "2024-06-01T12:00:00Z", "temp_c": 24.0, "hum_pct": 55.0},
-    {"device_id": "dev001", "ts_utc": "2024-06-01T13:00:00Z", "temp_c": 25.5, "hum_pct": 60.0},
-    {"device_id": "dev002", "ts_utc": "2024-06-01T12:05:00Z", "temp_c": 21.1, "hum_pct": 48.0},
-]
+from django.db.models import Avg
+from .models import Reading
 
 # GET /latest/<device_id>
 @api_view(['GET'])
 def latest_reading(request, device_id):
-    data = [r for r in READINGS if r["device_id"].lower() == device_id.lower()]
-    if not data:
+    obj = (Reading.objects
+           .filter(device_id__iexact=device_id)
+           .order_by('-ts_utc')
+           .first())
+    if not obj:
         return Response({"error": "no data"}, status=404)
-    # ordenar por ts_utc descendente (string ISO se ordena bien)
-    data = sorted(data, key=lambda r: r["ts_utc"], reverse=True)
-    return Response(data[0])
+    return Response({
+        "id": obj.id,
+        "device_id": obj.device_id,
+        "ts_utc": obj.ts_utc.isoformat(),
+        "temp_c": float(obj.temp_c),
+        "hum_pct": float(obj.hum_pct),
+    })
 
 # GET /average/<device_id>
 @api_view(['GET'])
 def average_reading(request, device_id):
-    data = [r for r in READINGS if r["device_id"].lower() == device_id.lower()]
-    if not data:
+    qs = Reading.objects.filter(device_id__iexact=device_id)
+    if not qs.exists():
         return Response({"error": "no data"}, status=404)
-    avg_temp = sum(r["temp_c"] for r in data) / len(data)
-    avg_hum = sum(r["hum_pct"] for r in data) / len(data)
+
+    agg = qs.aggregate(avg_temp=Avg('temp_c'), avg_hum=Avg('hum_pct'))
     return Response({
         "device_id": device_id,
-        "avg_temp_c": round(avg_temp, 2),
-        "avg_hum_pct": round(avg_hum, 2),
-        "count": len(data),
+        "avg_temp_c": round(float(agg['avg_temp']), 2),
+        "avg_hum_pct": round(float(agg['avg_hum']), 2),
+        "count": qs.count(),
     })
