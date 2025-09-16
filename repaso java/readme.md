@@ -1,4 +1,3 @@
-¡De una! Te hago un **recordatorio express de Java** para que lo tengas fresco, sin abrumarte.
 
 ---
 
