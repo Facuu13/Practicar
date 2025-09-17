@@ -505,3 +505,170 @@ INSERT INTO usuario_curso (usuario_id, curso_id) VALUES (2, 10), (2, 20);  -- Ju
 ```
 
 ---
+
+# 📌 NoSQL – Conceptos Fundamentales
+
+1. **¿Qué significa NoSQL?**
+
+   * *Not Only SQL* → no reemplaza SQL, sino que ofrece **otros modelos de datos** para resolver problemas que en SQL serían complejos o lentos.
+   * Se diseñó para manejar:
+
+     * Grandes volúmenes de datos (**Big Data**).
+     * Alta **escalabilidad horizontal** (agregar más servidores en vez de uno más potente).
+     * **Flexibilidad** en los esquemas (no siempre se define un esquema fijo).
+
+---
+
+2. **Características principales**
+
+   * **No siempre hay esquema fijo** → cada registro puede tener distintos campos.
+   * **Escalabilidad horizontal** → fácil de distribuir en varios nodos.
+   * **Consistencia eventual** (no siempre ACID como SQL, depende de la DB).
+   * Se guían muchas veces por el modelo **BASE** (Basically Available, Soft state, Eventual consistency).
+
+👉 Diferencia clave con SQL:
+
+* SQL = **estructurado, ACID, relaciones fuertes**.
+* NoSQL = **flexible, escalable, relaciones más débiles o implícitas**.
+
+---
+
+# 📌 Tipos de Bases de Datos NoSQL
+
+1. **Documentales** (MongoDB, CouchDB, Firebase Firestore)
+
+   * Guardan datos en **documentos JSON/BSON**.
+   * Ejemplo:
+
+     ```json
+     {
+       "id": 1,
+       "nombre": "Ana",
+       "edad": 25,
+       "pedidos": [
+         {"producto": "Laptop", "precio": 1000},
+         {"producto": "Mouse", "precio": 50}
+       ]
+     }
+     ```
+   * Ventaja: datos **anidados** y consulta rápida de toda la info de un usuario.
+
+---
+
+2. **Claves-Valor** (Redis, DynamoDB, Riak)
+
+   * Como un **diccionario gigante**: clave → valor.
+   * Ejemplo:
+
+     ```
+     "user:1" → { "nombre": "Ana", "edad": 25 }
+     "session:123" → "token_ABC123"
+     ```
+   * Muy rápidas para **caché**, sesiones, conteos en tiempo real.
+
+---
+
+3. **Columnar** (Cassandra, HBase, ScyllaDB)
+
+   * Datos en **familias de columnas**, optimizadas para **consultas analíticas masivas**.
+   * Ejemplo:
+
+     ```
+     usuario_id | nombre | edad | ciudad
+     -----------+--------+------+--------
+          1     | Ana    | 25   | Córdoba
+          2     | Juan   | 30   | Rosario
+     ```
+   * Muy usadas en **Big Data** (Facebook, Netflix, etc.).
+
+---
+
+4. **Grafos** (Neo4j, ArangoDB, Amazon Neptune)
+
+   * Guardan **nodos y relaciones**.
+   * Ejemplo:
+
+     ```
+     (Ana) -[:AMIGA_DE]-> (Juan)
+     (Ana) -[:COMPRA]-> (Laptop)
+     ```
+   * Ideal para **redes sociales, recomendaciones, rutas**.
+
+---
+
+# 📌 Ejemplo práctico con MongoDB (Documental)
+
+### Crear una colección y agregar documentos
+
+```js
+// Insertar un usuario
+db.usuarios.insertOne({
+  nombre: "Ana",
+  edad: 25,
+  pedidos: [
+    { producto: "Laptop", precio: 1000 },
+    { producto: "Mouse", precio: 50 }
+  ]
+});
+
+// Insertar varios usuarios
+db.usuarios.insertMany([
+  { nombre: "Juan", edad: 30 },
+  { nombre: "Lucía", edad: 28 }
+]);
+```
+
+---
+
+### Consultar documentos
+
+```js
+// Traer todos los usuarios
+db.usuarios.find();
+
+// Filtrar por condición (edad > 25)
+db.usuarios.find({ edad: { $gt: 25 } });
+
+// Buscar por campo anidado (pedidos.producto)
+db.usuarios.find({ "pedidos.producto": "Laptop" });
+```
+
+---
+
+### Actualizar documentos
+
+```js
+// Actualizar la edad de Juan
+db.usuarios.updateOne(
+  { nombre: "Juan" },
+  { $set: { edad: 31 } }
+);
+
+// Agregar un pedido nuevo a Ana
+db.usuarios.updateOne(
+  { nombre: "Ana" },
+  { $push: { pedidos: { producto: "Teclado", precio: 200 } } }
+);
+```
+
+---
+
+### Borrar documentos
+
+```js
+// Borrar a Lucía
+db.usuarios.deleteOne({ nombre: "Lucía" });
+```
+
+---
+
+# 📌 SQL vs NoSQL – Cuándo usar cada uno
+
+| SQL (Relacional)                             | NoSQL                                         |
+| -------------------------------------------- | --------------------------------------------- |
+| Relaciones complejas (JOINs).                | Datos poco estructurados o cambiantes.        |
+| Necesidad de ACID fuerte (bancos, finanzas). | Escalabilidad masiva (millones de usuarios).  |
+| Reportes consistentes y transacciones.       | Cachés, catálogos, logs, IoT, redes sociales. |
+| Ejemplo: PostgreSQL, MySQL.                  | Ejemplo: MongoDB, Redis, Cassandra.           |
+
+---
