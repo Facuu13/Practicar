@@ -906,6 +906,81 @@ El segundo mayor es: 7
 
 ---
 
+## `public`
 
+Como ya dijiste, indica que el método es **visible desde cualquier clase**.
+
+* Si fuera `private`, solo se podría usar dentro de la misma clase.
+* Si fuera `protected`, desde la clase y sus hijas.
+* Si no ponemos nada (default), se puede usar desde clases del mismo *package*.
+
+Eso lo tenés clarísimo 👌.
+
+---
+
+## `static`
+
+Esto significa que el método **pertenece a la clase** y no a un objeto (instancia).
+👉 En otras palabras: **no hace falta crear un objeto para llamarlo**.
+
+Ejemplo:
+
+```java
+public class Prueba {
+
+    // Método estático
+    public static void saludoEstatico() {
+        System.out.println("Hola desde static");
+    }
+
+    // Método normal (no estático)
+    public void saludoNormal() {
+        System.out.println("Hola desde objeto");
+    }
+
+    public static void main(String[] args) {
+        // Llamo al método static directamente con el nombre de la clase
+        Prueba.saludoEstatico();
+
+        // Para el otro, necesito crear un objeto
+        Prueba p = new Prueba();
+        p.saludoNormal();
+    }
+}
+```
+
+### Salida:
+
+```
+Hola desde static
+Hola desde objeto
+```
+
+---
+
+## ¿Por qué en el ejemplo de `segundoMayor` usé `static`?
+
+Porque lo llamamos desde el `main`, que también es `static`.
+
+* En Java, **un método static solo puede llamar a otro static directamente**.
+* Si no lo pusiera `static`, tendría que crear un objeto de la clase para usarlo:
+
+```java
+public static void main(String[] args) {
+    SegundoMayor sm = new SegundoMayor(); // creo objeto
+    System.out.println(sm.segundoMayor(new int[]{5, 7, 9}));
+}
+```
+
+Con `static` me evito esa instancia, y queda más simple para ejemplos.
+
+---
+
+📌 **Regla general** (simplificada):
+
+* Usá `static` si la función **no depende del estado de un objeto** (es decir, solo usa parámetros o variables locales).
+* Usá métodos normales (sin static) si la función necesita trabajar con los **atributos del objeto**.
+
+---
 
 
