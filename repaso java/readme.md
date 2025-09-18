@@ -983,4 +983,114 @@ Con `static` me evito esa instancia, y queda más simple para ejemplos.
 
 ---
 
+## 1. Método `static` (no depende de un objeto)
+
+Un método que **solo trabaja con parámetros o variables locales**, sin necesidad de atributos de la clase.
+
+```java
+public class Matematica {
+
+    // Método estático: no necesita atributos de la clase
+    public static int sumar(int a, int b) {
+        return a + b;
+    }
+
+    public static void main(String[] args) {
+        // Llamamos directo a sumar SIN crear un objeto
+        int resultado = Matematica.sumar(5, 3);
+        System.out.println("Resultado static: " + resultado);
+    }
+}
+```
+
+👉 Acá `sumar` no depende de ningún estado interno de `Matematica`. Es solo una operación.
+Por eso es natural que sea `static`.
+
+---
+
+## 2. Método normal (no static, depende del estado del objeto)
+
+Un método que **usa atributos internos de la clase** (el estado de un objeto).
+
+```java
+public class Persona {
+    // Atributo (estado del objeto)
+    private String nombre;
+
+    // Constructor
+    public Persona(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Método normal: usa el atributo 'nombre'
+    public void saludar() {
+        System.out.println("Hola, soy " + nombre);
+    }
+
+    public static void main(String[] args) {
+        // Necesitamos crear un objeto Persona
+        Persona p1 = new Persona("Facu");
+        p1.saludar(); // Usa el atributo interno
+    }
+}
+```
+
+👉 Acá el método `saludar` depende del **atributo `nombre`**.
+No tendría sentido que fuera `static`, porque cada persona tiene un `nombre` distinto.
+
+---
+
+## 📌 Comparación rápida
+
+| Caso                       | `static`                                           | No `static`                             |
+| -------------------------- | -------------------------------------------------- | --------------------------------------- |
+| ¿Necesita objeto?          | ❌ No                                               | ✅ Sí                                    |
+| Usa atributos de instancia | ❌ No                                               | ✅ Sí                                    |
+| Ejemplo típico             | Operaciones matemáticas, utilidades (`Math.max()`) | Métodos de objetos: `persona.saludar()` |
+| Cómo se llama              | `Clase.metodo()`                                   | `objeto.metodo()`                       |
+
+---
+
+🔧 **Ejemplo de mezcla (los dos juntos):**
+
+```java
+public class Coche {
+    private int velocidad;
+
+    public Coche(int velocidadInicial) {
+        this.velocidad = velocidadInicial;
+    }
+
+    // Método de objeto: depende de velocidad
+    public void acelerar(int incremento) {
+        velocidad += incremento;
+        System.out.println("Nueva velocidad: " + velocidad);
+    }
+
+    // Método static: utilidad general
+    public static int convertirKmHaMph(int kmh) {
+        return (int)(kmh / 1.609);
+    }
+
+    public static void main(String[] args) {
+        // Método static -> no hace falta un objeto
+        int mph = Coche.convertirKmHaMph(100);
+        System.out.println("100 km/h en mph = " + mph);
+
+        // Método normal -> necesitamos un objeto
+        Coche miCoche = new Coche(50);
+        miCoche.acelerar(20); // usa el atributo 'velocidad'
+    }
+}
+```
+
+---
+
+👉 Resumen mental:
+
+* **`static`** = "función de la clase" (como una calculadora que cualquiera puede usar).
+* **no `static`** = "función del objeto" (depende de sus datos internos).
+
+---
+
 
