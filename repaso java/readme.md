@@ -848,6 +848,63 @@ System.out.println(emails); // [a@gmail.com, b@gmail.com]
 
 ---
 
+### Explicación rápida
+
+1. Recorremos el array una sola vez.
+2. Guardamos dos variables: `mayor` y `segundoMayor`.
+3. Cada vez que encontramos un número más grande que el actual `mayor`, actualizamos ambos.
+4. Si no es el mayor, pero es más grande que el `segundoMayor` (y distinto de `mayor`), actualizamos `segundoMayor`.
+
+### Código en Java
+
+```java
+public class Main {
+    public static int segundoMayor(int[] numeros) {
+        int mayor = Integer.MIN_VALUE;
+        int segundoMayor = Integer.MIN_VALUE;
+
+        for (int num : numeros) {
+            if (num > mayor) {
+                // actualizamos ambos
+                segundoMayor = mayor;
+                mayor = num;
+            } else if (num > segundoMayor && num != mayor) {
+                // actualizamos solo el segundo
+                segundoMayor = num;
+            }
+        }
+
+        // si no se encontró un segundo mayor válido
+        if (segundoMayor == Integer.MIN_VALUE) {
+            throw new IllegalArgumentException("No existe un segundo mayor en el arreglo.");
+        }
+
+        return segundoMayor;
+    }
+
+    public static void main(String[] args) {
+        int[] array = {5, 7, 2, 9, 4, 9};
+        System.out.println("El segundo mayor es: " + segundoMayor(array));
+    }
+}
+```
+
+### Ejemplo de salida
+
+Si el arreglo es:
+
+```
+[5, 7, 2, 9, 4, 9]
+```
+
+El mayor es `9`, y el segundo mayor es `7`.
+El programa imprimiría:
+
+```
+El segundo mayor es: 7
+```
+
+---
 
 
 
