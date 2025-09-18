@@ -624,9 +624,7 @@ a.sonido(); // Ladra
 * **Interface**: solo define métodos (contratos), la clase que la implemente debe definirlos todos.
 * Una clase solo puede heredar **una clase abstracta**, pero puede implementar **múltiples interfaces**.
 
-En Java esa frase significa lo siguiente:
-
-### 1. Herencia de clases abstractas
+### Herencia de clases abstractas
 
 * Una **clase abstracta** es una clase que puede contener métodos definidos (con cuerpo) y métodos abstractos (sin cuerpo, solo la firma).
 * Una clase concreta **solo puede heredar de una única clase abstracta** (porque Java no soporta herencia múltiple de clases).
@@ -652,7 +650,7 @@ class Perro extends Animal {
 
 ---
 
-### 2. Implementación de interfaces
+### Implementación de interfaces
 
 * Una **interface** en Java define un conjunto de métodos (normalmente sin implementación, aunque desde Java 8 puede tener métodos `default` y `static`).
 * Una clase puede **implementar múltiples interfaces** a la vez, lo que permite simular una forma de herencia múltiple.
@@ -684,7 +682,7 @@ class Pato implements Volador, Nadador {
 
 ---
 
-### 3. Diferencia clave
+### Diferencia clave
 
 * **Clase abstracta**: se hereda con `extends`, solo una.
 * **Interfaces**: se implementan con `implements`, y se pueden poner varias separadas por coma.
