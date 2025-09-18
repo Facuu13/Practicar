@@ -557,9 +557,7 @@ public class Main {
 * **`abstract class`** → clases que no se pueden instanciar, usadas como molde para herencia.
 
 ---
-¡Perfecto! 🚀 Te armo un **kit completo para entrevistas en Java**, con **preguntas típicas + respuestas claras**, más unos **ejemplos cortitos de código** para que no te olvides.
 
----
 
 # 📝 Top 10 Preguntas y Respuestas de Java en Entrevistas
 
@@ -625,6 +623,104 @@ a.sonido(); // Ladra
 * **Abstract class**: puede tener métodos implementados y abstractos.
 * **Interface**: solo define métodos (contratos), la clase que la implemente debe definirlos todos.
 * Una clase solo puede heredar **una clase abstracta**, pero puede implementar **múltiples interfaces**.
+
+En Java esa frase significa lo siguiente:
+
+### 1. Herencia de clases abstractas
+
+* Una **clase abstracta** es una clase que puede contener métodos definidos (con cuerpo) y métodos abstractos (sin cuerpo, solo la firma).
+* Una clase concreta **solo puede heredar de una única clase abstracta** (porque Java no soporta herencia múltiple de clases).
+* Ejemplo:
+
+```java
+abstract class Animal {
+    abstract void hacerSonido(); // método abstracto
+    void dormir() {              // método concreto
+        System.out.println("Zzz...");
+    }
+}
+
+class Perro extends Animal {
+    @Override
+    void hacerSonido() {
+        System.out.println("Guau guau");
+    }
+}
+```
+
+👉 Aquí `Perro` hereda de **Animal** y está obligado a implementar el método abstracto `hacerSonido`.
+
+---
+
+### 2. Implementación de interfaces
+
+* Una **interface** en Java define un conjunto de métodos (normalmente sin implementación, aunque desde Java 8 puede tener métodos `default` y `static`).
+* Una clase puede **implementar múltiples interfaces** a la vez, lo que permite simular una forma de herencia múltiple.
+* Ejemplo:
+
+```java
+interface Volador {
+    void volar();
+}
+
+interface Nadador {
+    void nadar();
+}
+
+class Pato implements Volador, Nadador {
+    @Override
+    public void volar() {
+        System.out.println("El pato vuela.");
+    }
+
+    @Override
+    public void nadar() {
+        System.out.println("El pato nada.");
+    }
+}
+```
+
+👉 Aquí `Pato` implementa **dos interfaces** (`Volador` y `Nadador`) y debe proporcionar la implementación de todos sus métodos.
+
+---
+
+### 3. Diferencia clave
+
+* **Clase abstracta**: se hereda con `extends`, solo una.
+* **Interfaces**: se implementan con `implements`, y se pueden poner varias separadas por coma.
+
+Ejemplo combinado:
+
+```java
+abstract class Animal {
+    abstract void comer();
+}
+
+interface Volador {
+    void volar();
+}
+
+interface Nadador {
+    void nadar();
+}
+
+class Pato extends Animal implements Volador, Nadador {
+    @Override
+    void comer() {
+        System.out.println("El pato come pan.");
+    }
+
+    @Override
+    public void volar() {
+        System.out.println("El pato vuela bajo.");
+    }
+
+    @Override
+    public void nadar() {
+        System.out.println("El pato nada en el lago.");
+    }
+}
+```
 
 ---
 
