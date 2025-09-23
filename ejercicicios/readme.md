@@ -279,3 +279,92 @@ public class Main
 	}
 }
 ```
+
+## 🌐 Ejercicio IoT 9 (en **C**)
+
+**Empaquetado de datos de sensores en un frame binario** 📦
+
+En muchos sistemas IoT (con LoRa, ESP-NOW, Zigbee, etc.) los datos de sensores se mandan en un **frame compacto** para ahorrar ancho de banda. Queremos armar un frame simple.
+
+👉 Requisitos:
+
+1. Suponé que tenemos 3 sensores:
+
+   * Temperatura (entero, °C).
+   * Humedad (entero, %).
+   * Luminosidad (entero, 0-1023).
+2. Pedir al usuario ingresar un valor para cada sensor.
+3. Armar un **frame de 5 bytes** con el siguiente formato:
+
+   ```
+   Byte 0 → Temperatura (0-255)
+   Byte 1 → Humedad (0-100)
+   Byte 2 → Luminosidad parte alta (bits 8-9)
+   Byte 3 → Luminosidad parte baja (bits 0-7)
+   Byte 4 → Checksum (suma de bytes 0-3 módulo 256)
+   ```
+4. Mostrar el frame en **hexadecimal**.
+
+---
+
+📌 Ejemplo esperado:
+
+```
+Entrada: Temp=25, Hum=60, Lum=800
+Frame (hex): [19, 3C, 03, 20, 78]
+```
+
+* `25 decimal = 0x19`
+* `60 decimal = 0x3C`
+* `800 decimal = 0x0320` → parte alta = `0x03`, parte baja = `0x20`
+* Checksum = (0x19+0x3C+0x03+0x20) mod 256 = `0x78`
+
+---
+
+👉 Con este ejercicio vas a practicar:
+
+* Manejo de enteros y arrays en C.
+* Operaciones de bits (shift, máscara).
+* Cálculo de checksum.
+* Un caso real de **formato de comunicación IoT**.
+
+---
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+int main()
+{
+    int temp;
+    int hum;
+    int lum;
+    uint8_t frame[5];
+
+    printf("Ingrese la temperatura (°C, 0–255): ");
+    scanf("%d", &temp);
+    printf("Ingrese la humedad (0–100): ");
+    scanf("%d", &hum);
+    printf("Ingrese la luminosidad (0–1023): ");
+    scanf("%d", &lum);
+
+    // Empaquetado
+    frame[0] = (uint8_t) temp;
+    frame[1] = (uint8_t) hum;
+    frame[2] = (lum >> 8) & 0xFF;   // parte alta
+    frame[3] = lum & 0xFF;          // parte baja
+    frame[4] = (frame[0] + frame[1] + frame[2] + frame[3]) % 256; // checksum
+
+    // Mostrar frame
+    printf("Frame generado (hex): [");
+    for (int i = 0; i < 5; i++) {
+        printf("%02X", frame[i]);
+        if (i < 4) {
+            printf(", ");
+        }
+    }
+    printf("]\n");
+
+    return 0;
+}
+```
+
