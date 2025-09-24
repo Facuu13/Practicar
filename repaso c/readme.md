@@ -556,3 +556,38 @@ bit0 = 0
 ```
 
 ---
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+int main()
+{
+    uint8_t x1 = 0;
+    //Encender el bit 3
+    x1 |= (1u << 3);
+    printf("valor de x1: %02X\n",x1);
+    
+    uint8_t x2 = 0xFF;
+    //Apagar el bit 2.
+    x2 &= ~(1u << 2);
+    printf("valor de x2: %02X\n",x2);
+    
+    uint8_t x3 = (uint8_t) 0b00001111;
+    //Invertir el bit 2.
+    x3 ^= (1u << 2);
+    printf("valor de x3: %02X\n",x3);
+    
+    uint8_t x4 = (uint8_t) 0b10101010;
+    //Leer el bit 7, 4 y 0 usando (x >> n) & 1.
+    //Mostrarlos.
+    
+    int bit_7 = (x4 >> 7) & 1;
+    int bit_4 = (x4 >> 4) & 1;
+    int bit_0 = (x4 >> 0) & 1;
+    printf("valor de del bit_7: %d\n",bit_7);
+    printf("valor de del bit_4: %d\n",bit_4);
+    printf("valor de del bit_0: %d\n",bit_0);
+    
+    return 0;
+}
+```
