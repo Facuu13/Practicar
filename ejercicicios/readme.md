@@ -448,6 +448,78 @@ Decodificación:
 * Serialización y deserialización, muy típico en protocolos IoT (LoRa, Zigbee, ESP-NOW).
 
 ---
+```c
+#include <stdio.h>
+#include <stdint.h>
 
+typedef struct {
+    uint8_t device_id;  // Byte 0
+    uint8_t flags;      // Byte 1 (bits)
+    uint8_t battery;    // Byte 2 (0-100)
+    uint8_t checksum;   // Byte 3 (sum mod 256)
+} Frame;
 
+// Helpers opcionales (podés completarlos o dejarlos inline)
+static uint8_t make_flags(int sensor_activo, int bateria_baja, int error_comunicacion) {
+    uint8_t f = 0;
+    // Bit 0: sensor activo
+    if (sensor_activo)       f |= (1u << 0);
+    // Bit 1: batería baja
+    if (bateria_baja)        f |= (1u << 1);
+    // Bit 2: error de comunicación
+    if (error_comunicacion)  f |= (1u << 2);
+    // Bits 3-7 reservados (quedan en 0)
+    return f;
+}
 
+static uint8_t checksum3(uint8_t a, uint8_t b, uint8_t c) {
+    return (uint8_t)((a + b + c) % 256);
+}
+
+static void print_frame_hex(const Frame *fr) {
+    printf("Frame (hex): [%02X, %02X, %02X, %02X]\n",
+           fr->device_id, fr->flags, fr->battery, fr->checksum);
+}
+
+static void decode_flags(uint8_t flags) {
+    int sensor_activo      = (flags >> 0) & 1;
+    int bateria_baja       = (flags >> 1) & 1;
+    int error_comunicacion = (flags >> 2) & 1;
+
+    printf("Decodificación:\n");
+    printf(" - Sensor activo = %s\n", sensor_activo ? "ON" : "OFF");
+    printf(" - Batería baja = %s\n", bateria_baja ? "SÍ" : "NO");
+    printf(" - Error de comunicación = %s\n", error_comunicacion ? "SÍ" : "NO");
+}
+
+int main(void) {
+    int device_id_in, sensor_activo_in, bateria_baja_in, error_com_in, battery_in;
+    Frame fr = {0};
+
+    // 1) Inputs
+    printf("Device ID (0-255): ");
+    scanf("%d", &device_id_in);
+    printf("Sensor activo? (1/0): ");
+    scanf("%d", &sensor_activo_in);
+    printf("Batería baja? (1/0): ");
+    scanf("%d", &bateria_baja_in);
+    printf("Error de comunicación? (1/0): ");
+    scanf("%d", &error_com_in);
+    printf("Nivel de batería (0-100): ");
+    scanf("%d", &battery_in);
+
+    // 2) Normalización a uint8_t (sin validaciones por ahora)
+    fr.device_id = (uint8_t)device_id_in;
+    fr.flags     = make_flags(sensor_activo_in, bateria_baja_in, error_com_in);
+    fr.battery   = (uint8_t)battery_in;
+
+    // 3) Checksum
+    fr.checksum  = checksum3(fr.device_id, fr.flags, fr.battery);
+
+    // 4) Salidas
+    print_frame_hex(&fr);
+    decode_flags(fr.flags);
+
+    return 0;
+}
+```
