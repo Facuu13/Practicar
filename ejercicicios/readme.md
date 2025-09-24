@@ -368,3 +368,86 @@ int main()
 }
 ```
 
+----
+## 🌐 Ejercicio IoT 10 (en **C**, usando `struct`)
+
+**Frame de estado de dispositivo** 📡
+
+Queremos representar el estado de un **nodo IoT** en un frame binario de **4 bytes**.
+
+👉 Formato del frame:
+
+* **Byte 0** → `device_id` (0–255).
+* **Byte 1** → `flags` (cada bit representa un estado):
+
+  * Bit 0 → Sensor activo (1=activo, 0=inactivo).
+  * Bit 1 → Batería baja.
+  * Bit 2 → Error de comunicación.
+  * Bit 3–7 → Reservado.
+* **Byte 2** → Nivel de batería (0–100%).
+* **Byte 3** → Checksum (suma de los primeros 3 bytes mod 256).
+
+---
+
+### Requisitos
+
+1. Usar un `struct` para representar el frame:
+
+   ```c
+   typedef struct {
+       uint8_t device_id;
+       uint8_t flags;
+       uint8_t battery;
+       uint8_t checksum;
+   } Frame;
+   ```
+2. Pedir al usuario:
+
+   * `device_id` (0–255).
+   * Si el sensor está activo o no.
+   * Si hay batería baja.
+   * Si hay error de comunicación.
+   * Nivel de batería.
+3. Armar el `flags` combinando bits con operaciones de **bitwise OR (`|`)** y **shift (`<<`)**.
+4. Calcular el checksum.
+5. Mostrar el frame en **hexadecimal**.
+6. (Opcional) Decodificar de vuelta: imprimir el estado de cada flag a partir del byte `flags`.
+
+---
+
+### 📌 Ejemplo esperado
+
+Entrada:
+
+```
+Device ID: 42
+Sensor activo? (1/0): 1
+Batería baja? (1/0): 0
+Error de comunicación? (1/0): 1
+Nivel de batería (0–100): 85
+```
+
+Salida:
+
+```
+Frame (hex): [2A, 05, 55, 84]
+Decodificación:
+ - Sensor activo = ON
+ - Batería baja = NO
+ - Error de comunicación = SÍ
+ - Nivel batería = 85 %
+```
+
+---
+
+👉 Con este problema vas a practicar:
+
+* Uso de `struct` en C.
+* Manejo de bits (`|`, `<<`, `&`, `>>`).
+* Checksum simple.
+* Serialización y deserialización, muy típico en protocolos IoT (LoRa, Zigbee, ESP-NOW).
+
+---
+
+
+
