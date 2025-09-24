@@ -591,3 +591,116 @@ int main()
     return 0;
 }
 ```
+---
+
+# 📚 Mini teoría
+
+Un **byte de flags** es solo un `uint8_t` donde cada bit representa un estado distinto:
+
+```
+bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0
+```
+
+Por ejemplo:
+
+* Bit 0 = LED encendido
+* Bit 1 = Sensor activo
+* Bit 2 = Error de comunicación
+* Bit 3 = Batería baja
+* Bits 4–7 = reservados
+
+Con este enfoque, en un solo byte podés guardar hasta 8 estados distintos.
+
+---
+
+# 📝 Ejercicios de práctica – Flags combinados
+
+### Ejercicio 1 – Encender varios bits
+
+1. Partí de `uint8_t flags = 0;`.
+2. Encendé los bits 0, 2 y 5.
+3. Mostrá el valor final en binario/hex.
+
+---
+
+### Ejercicio 2 – Chequear varios bits
+
+1. Partí de `flags = 0b00100101;` (bits 0, 2 y 5 encendidos).
+2. Verificá con un `if` si los **bits 2 y 5 están encendidos a la vez**.
+
+   * Si sí: imprimí `"Flags 2 y 5 activos"`.
+   * Si no: `"No activos"`.
+
+---
+
+### Ejercicio 3 – Apagar un bit sin afectar los otros
+
+1. Con `flags = 0b00100101;`, apagá solo el **bit 0**.
+2. Mostrá el valor antes y después.
+
+---
+
+### Ejercicio 4 – Invertir un grupo de bits
+
+1. Con `flags = 0b11110000;`, invertí los bits 0–3.
+2. Mostrá el resultado.
+
+---
+
+👉 Estos ejercicios ya te ponen en el terreno de manejar **máscaras de varios bits**:
+
+* Encender varios → `flags |= (1<<0) | (1<<2) | (1<<5);`
+* Apagar uno → `flags &= ~(1<<0);`
+* Chequear → `if ( (flags & ((1<<2)|(1<<5))) == ((1<<2)|(1<<5)) ) ...`
+* Invertir → `flags ^= 0x0F;  // invierte bits 0–3`
+
+---
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+// Muestra un byte en binario (ej: 0x2A -> 00101010)
+void print_bin(uint8_t val) {
+    for (int i = 7; i >= 0; i--) {
+        printf("%d", (val >> i) & 1);
+    }
+    printf("\n");
+}
+
+// Muestra un byte en hexadecimal con 2 dígitos (ej: 0x2A -> 2A)
+void print_hex(uint8_t val) {
+    printf("%02X\n", val);
+}
+
+
+int main()
+{
+    //Partí de uint8_t flags = 0;.
+    //Encendé los bits 0, 2 y 5.
+    //Mostrá el valor final en binario/hex.
+    uint8_t flags1 = 0;
+    flags1 |= (1u << 5) | (1u << 2) | (1u << 0);
+    print_bin(flags1);
+    print_hex(flags1);
+    
+    //Verificá con un if si los bits 2 y 5 están encendidos a la vez.
+    if ( (flags1 & ((1<<2)|(1<<5))) == ((1<<2)|(1<<5)) ){
+        printf("Flags 2 y 5 activos\n");
+    }
+    else{
+        printf("No activos\n");
+    }
+    // apagá solo el bit 0.
+    flags1 &= ~(1u << 0);
+    print_bin(flags1);
+    print_hex(flags1);
+    
+    uint8_t flags2 = 0b11110000;
+    //invertí los bits 0–3
+    flags2 ^= 0x0F;
+    print_bin(flags2);
+    
+    return 0;
+}
+```
+
