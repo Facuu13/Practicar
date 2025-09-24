@@ -462,3 +462,97 @@ int main() {
 
 ---
 
+
+El **manejo de bits** es clave en IoT, protocolos, drivers, empaquetado de datos, etc.
+Vamos a armar un **plan paso a paso** con teoría + ejercicios sencillos y vamos subiendo el nivel.
+
+---
+
+# 📚 Teoría mínima para arrancar
+
+Un byte (`uint8_t`) tiene 8 bits:
+
+```
+bit7  bit6  bit5  bit4  bit3  bit2  bit1  bit0
+ 128   64    32    16     8     4     2     1
+```
+
+Las operaciones básicas:
+
+* **Encender un bit** → `x |= (1u << n);`
+* **Apagar un bit** → `x &= ~(1u << n);`
+* **Invertir un bit** → `x ^= (1u << n);`
+* **Leer un bit** → `(x >> n) & 1;`
+
+---
+
+# 📝 Ejercicios nivel 1 (muy básicos)
+
+### Ejercicio 1 – Encender y leer bits
+
+👉 Tarea:
+
+1. Definí `uint8_t x = 0;`.
+2. Encendé el bit 3.
+3. Mostrá `x` en binario y verificá que el bit 3 está en 1.
+4. Leé el bit 3 y mostralo en pantalla.
+
+*Esperado:*
+
+```
+x = 00001000
+bit3 = 1
+```
+
+---
+
+### Ejercicio 2 – Apagar un bit
+
+👉 Tarea:
+
+1. Iniciá `x = 0xFF; // 11111111`.
+2. Apagá el bit 2.
+3. Mostrá el valor en binario.
+
+*Esperado:*
+
+```
+x = 11111011
+```
+
+---
+
+### Ejercicio 3 – Alternar bits
+
+👉 Tarea:
+
+1. `x = 0b00001111;`
+2. Invertí el bit 2.
+3. Mostrá el resultado en binario.
+
+*Esperado:*
+
+```
+antes: 00001111
+después: 00001011
+```
+
+---
+
+### Ejercicio 4 – Máscaras
+
+👉 Tarea:
+
+1. Tenés `x = 0b10101010;`
+2. Leé el bit 7, 4 y 0 usando `(x >> n) & 1`.
+3. Mostralos.
+
+*Esperado:*
+
+```
+bit7 = 1
+bit4 = 1
+bit0 = 0
+```
+
+---
