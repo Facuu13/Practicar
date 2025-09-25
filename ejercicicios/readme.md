@@ -523,3 +523,138 @@ int main(void) {
     return 0;
 }
 ```
+
+---
+
+## 🌐 Ejercicio IoT 14 (en **Python**)
+
+**Estación meteorológica simplificada** ☁️🌡️💨
+
+Una estación IoT mide tres variables cada hora:
+
+* **Temperatura (°C)**
+* **Humedad (%)**
+* **Velocidad del viento (km/h)**
+
+Queremos registrar lecturas, generar alertas y estadísticas.
+
+### Requisitos
+
+1. Pedir al usuario la cantidad de **horas registradas** `n`.
+2. Para cada hora, ingresar los 3 valores (temperatura, humedad, viento).
+   Guardar en una lista de tuplas o diccionarios.
+   Ejemplo:
+
+   ```python
+   [
+     {"temp": 25, "hum": 60, "viento": 15},
+     {"temp": 30, "hum": 40, "viento": 55},
+     ...
+   ]
+   ```
+3. Procesar todas las lecturas:
+
+   * Si `temp > 35` → **"ALERTA CALOR EXTREMO"**
+   * Si `hum < 20` → **"ALERTA SEQUÍA"**
+   * Si `viento > 70` → **"ALERTA VIENTO FUERTE"**
+     (pueden salir varias alertas para la misma hora)
+4. Al final, mostrar:
+
+   * Temperatura **máxima** registrada.
+   * Humedad **mínima** registrada.
+   * Promedio de velocidad del viento.
+
+---
+
+### 📌 Ejemplo esperado
+
+Entrada:
+
+```
+Cantidad de horas: 3
+Hora 1 -> temp hum viento: 25 60 15
+Hora 2 -> temp hum viento: 38 18 40
+Hora 3 -> temp hum viento: 32 45 80
+```
+
+Salida:
+
+```
+Hora 1: OK
+Hora 2: ALERTA CALOR EXTREMO, ALERTA SEQUÍA
+Hora 3: ALERTA VIENTO FUERTE
+
+Temperatura máxima = 38 °C
+Humedad mínima = 18 %
+Promedio viento = 45.0 km/h
+```
+
+---
+
+👉 Con este ejercicio vas a practicar:
+
+* Listas y diccionarios en Python.
+* Condiciones múltiples.
+* Estadísticas básicas (min, max, promedio).
+
+```python
+H = int(input("Ingrese la cantidad de horas: "))
+
+horas = {}
+
+for i in range (H):
+    print(f"Hora {i+1}")
+    datos={}
+    for d in range(3):
+        if d == 0:
+            temp=int(input("Ingrese la temperatura: "))
+            datos["temp"] = temp
+        elif d== 1:
+            hum = int(input("Ingrese la humedad: "))
+            datos["hum"] = hum
+        else:
+            viento = int(input("Ingrese la velocidad del viento: "))
+            datos["viento"] = viento
+    
+    horas[f"hora{i+1}"]=datos
+
+temp_max=None
+hum_min=None
+s_viento=0
+
+for h,d in horas.items():
+    t=d.get("temp","no existe ese dato")
+    hum=d.get("hum","no existe ese dato")
+    v=d.get("viento","no existe ese dato")
+    s_viento += v
+    s = None
+    if temp_max is None:
+        temp_max = t
+    elif t > temp_max:
+        temp_max = t
+    
+    if hum_min is None:
+        hum_min = hum
+    elif hum < hum_min:
+        hum_min = hum
+        
+    if t > 35:
+        s= "ALERTA CALOR EXTREMO"
+    if hum < 20:
+        if s is None:
+            s = "ALERTA SEQUÍA"
+        else:
+            s += ", ALERTA SEQUÍA"
+    if v > 70:
+        if s is None:
+            s = "ALERTA VIENTO FUERTE"
+        else:
+            s += ", ALERTA VIENTO FUERTE"
+    if t <=35 and hum >= 20 and v <= 70:
+        s= "OK"
+    print(f"{h} : {s}")
+
+print(f"Temperatura máxima = {temp_max}°C")
+print(f"Humedad mínima = {hum_min} %")
+print(f"Promedio viento = {s_viento/H} km/h")
+```
