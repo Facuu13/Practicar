@@ -658,3 +658,124 @@ print(f"Temperatura máxima = {temp_max}°C")
 print(f"Humedad mínima = {hum_min} %")
 print(f"Promedio viento = {s_viento/H} km/h")
 ```
+
+
+---
+
+## 🌐 Ejercicio IoT 21 (Python, POO + Enum)
+
+**Control de actuadores IoT (luces y ventiladores)** 💡🌀
+
+### Requisitos
+
+1. Crear un **enum** `Estado` con dos valores:
+
+   * `ON`
+   * `OFF`
+
+2. Crear una clase `Actuador`:
+
+   * Atributos:
+
+     * `nombre` (str)
+     * `estado` (Estado, inicia en `OFF`)
+   * Métodos:
+
+     * `encender()` → cambia el estado a `ON`.
+     * `apagar()` → cambia el estado a `OFF`.
+     * `toggle()` → invierte el estado.
+     * `__str__()` → devuelve un string legible: `"Actuador luz1 está ON"`.
+
+3. Crear una clase `Controlador`:
+
+   * Atributo: lista de actuadores.
+   * Métodos:
+
+     * `agregar_actuador(actuador)`
+     * `mostrar_estados()` → lista todos los actuadores con su estado actual.
+
+4. En el programa principal:
+
+   * Crear dos actuadores (`luz1`, `ventilador1`).
+   * Encender la luz, dejar el ventilador apagado.
+   * Mostrar estados.
+   * Luego hacer un `toggle()` al ventilador y volver a mostrar estados.
+
+---
+
+### 📌 Ejemplo esperado
+
+```
+Actuador luz1 está ON
+Actuador ventilador1 está OFF
+
+Después del toggle en ventilador:
+Actuador luz1 está ON
+Actuador ventilador1 está ON
+```
+
+---
+
+👉 Con este problema practicás:
+
+* **Enum** aplicado a estados de dispositivos.
+* **POO** con métodos que modifican el estado.
+* Una clase gestora (`Controlador`) que maneja varios objetos.
+
+---
+```python
+from enum import Enum
+
+class Estado(Enum):
+    OFF = 0
+    ON = 1
+
+class Actuador:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.estado = Estado.OFF
+    
+    def encender(self):
+        self.estado = Estado.ON
+    
+    def apagar(self):
+        self.estado = Estado.OFF
+    
+    def toggle(self):
+        if self.estado == Estado.ON:
+            self.estado = Estado.OFF
+        else:
+            self.estado = Estado.ON
+    
+    def __str__(self):
+        return f"Actuador {self.nombre} está {self.estado.name}"
+
+class Controlador:
+    def __init__(self):
+        self.actuadores = []
+        
+    def agregar_actuador(self, actuador):
+        self.actuadores.append(actuador)
+        
+    def mostrar_estados(self):
+        for a in self.actuadores:
+            print(a)
+
+
+# Ejemplo de uso
+a1 = Actuador("luz1")
+a2 = Actuador("ventilador1")
+
+a1.encender()
+a2.apagar()
+
+c1 = Controlador()
+c1.agregar_actuador(a1)
+c1.agregar_actuador(a2)
+
+c1.mostrar_estados()
+
+print("\nDespues del toggle en ventilador:")
+a2.toggle()
+c1.mostrar_estados()
+```
