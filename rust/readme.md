@@ -408,6 +408,221 @@ Final: [1, 2, 3, 4]
 ---
 
 
+¡De una! Vamos a **iterar colecciones en Rust** con `iter`, `iter_mut` e `into_iter`, paso a paso, con mini-ejemplos claros.
+
+---
+
+# 1) ¿Qué es un iterador?
+
+Un **iterador** es un objeto que produce ítems uno a uno cuando llamás a `next()`.
+En Rust, casi nunca llamás `next()` a mano: usás `for`, o métodos como `find`, `map`, `filter`, etc.
+
+* `v.iter()` → itera por **referencias inmutables**: `&T`
+* `v.iter_mut()` → itera por **referencias mutables**: `&mut T`
+* `v.into_iter()` → **consume** la colección y produce **valores**: `T`
+
+> Azúcar sintáctico de `for`:
+>
+> * `for x in v` usa `into_iter()` (consume `v`)
+> * `for x in &v` usa `iter()`
+> * `for x in &mut v` usa `iter_mut()`
+
+---
+
+# 2) Leer elementos (iteración inmutable)
+
+```rust
+fn main() {
+    let numeros = vec![10, 20, 30];
+
+    // Formas equivalentes
+    for n in &numeros {           // azúcar de numeros.iter()
+        println!("n = {}", n);
+    }
+
+    numeros.iter().for_each(|n| {
+        println!("otra vez: {}", n);
+    });
+
+    // El vector sigue disponible (no fue consumido)
+    println!("len = {}", numeros.len());
+}
+```
+
+* `&numeros` / `.iter()` ⇒ te da `&i32` (referencias de solo lectura).
+
+---
+
+# 3) Modificar elementos (iteración mutable)
+
+```rust
+fn main() {
+    let mut nums = vec![1, 2, 3];
+
+    for n in &mut nums {          // azúcar de nums.iter_mut()
+        *n += 10;                 // desreferencia para escribir
+    }
+
+    println!("{:?}", nums);       // [11, 12, 13]
+}
+```
+
+* `&mut nums` / `.iter_mut()` ⇒ te da `&mut i32` para poder **cambiar**.
+
+---
+
+# 4) Consumir la colección (into_iter)
+
+```rust
+fn main() {
+    let nums = vec![1, 2, 3];
+
+    // into_iter mueve (consume) cada elemento
+    let textos: Vec<String> = nums
+        .into_iter()
+        .map(|n| format!("n={}", n)) // acá ya tenés valores, no referencias
+        .collect();
+
+    println!("{:?}", textos);
+    // ¡Ojo! nums ya no existe aquí (fue consumido).
+}
+```
+
+Usá `into_iter` cuando necesitás **tomar ownership** de los ítems o **convertir** la colección.
+
+---
+
+# 5) Buscar elementos
+
+### `find` (devuelve Option<&T> o Option<T> según el iterador)
+
+```rust
+fn main() {
+    let nums = vec![10, 20, 30];
+
+    if let Some(x) = nums.iter().find(|&&n| n > 15) {
+        println!("encontré: {}", x);   // x: &i32
+    }
+
+    // posición (índice)
+    if let Some(i) = nums.iter().position(|&n| n == 20) {
+        println!("índice de 20: {}", i);
+    }
+}
+```
+
+> Nota: con `iter()` el cierre recibe `&&i32` si usás `|n|`; una forma común es `|&n|` para “copiar” a `n`.
+
+---
+
+# 6) Predicados útiles: `any`, `all`, `contains`
+
+```rust
+fn main() {
+    let nums = vec![1, 2, 3, 4];
+
+    let hay_par = nums.iter().any(|&n| n % 2 == 0);
+    let todos_positivos = nums.iter().all(|&n| n > 0);
+    let tiene_tres = nums.contains(&3); // método de Vec, usa PartialEq
+
+    println!("{hay_par} {todos_positivos} {tiene_tres}");
+}
+```
+
+---
+
+# 7) `enumerate` (índice + valor)
+
+```rust
+fn main() {
+    let v = vec!["temp", "hum", "luz"];
+
+    for (i, nombre) in v.iter().enumerate() {
+        println!("#{i} -> {nombre}");
+    }
+}
+```
+
+---
+
+# 8) `map` y `filter` (+ `collect`)
+
+```rust
+fn main() {
+    let nums = vec![1, 2, 3, 4, 5];
+
+    let cuadrados: Vec<i32> = nums.iter().map(|&n| n * n).collect();
+    let pares: Vec<i32>      = nums.iter().copied().filter(|n| n % 2 == 0).collect();
+
+    println!("{:?} {:?}", cuadrados, pares);
+}
+```
+
+* `copied()` transforma `&i32` → `i32` (copia) para evitar `|&n|`.
+
+---
+
+# 9) Slices y arrays también “iteran”
+
+```rust
+fn main() {
+    let arr = [10, 20, 30];
+    for x in arr.iter() {
+        println!("{}", x);
+    }
+
+    let slice: &[i32] = &arr[0..2];
+    for x in slice {
+        println!("slice: {}", x);
+    }
+}
+```
+
+---
+
+# 10) Iterar structs (ejemplo IoT rápido)
+
+```rust
+struct Sensor { nombre: String, valor: i32 }
+
+fn main() {
+    let mut sensores = vec![
+        Sensor { nombre: "Temp".into(),   valor: 22 },
+        Sensor { nombre: "Humedad".into(), valor: 60 },
+    ];
+
+    // Leer
+    for s in &sensores {
+        println!("{} = {}", s.nombre, s.valor);
+    }
+
+    // Modificar (sumar 1 a todas las lecturas)
+    for s in &mut sensores {
+        s.valor += 1;
+    }
+}
+```
+
+---
+
+## Errores comunes (y cómo evitarlos)
+
+* **Consumir sin querer**: `for x in v { ... }` consume `v`. Si después querés usar `v`, iterá con `&v` o `&mut v`.
+* **Mezclar préstamos**: no podés tener a la vez un préstamo mutable y otro inmutable sobre el **mismo** dato/colección.
+* **Mover valores al cerrar**: si usás `into_iter()` en un `Vec<String>`, cada `String` se mueve. Usá `iter()` si solo leés.
+
+---
+
+## Mini-prácticas (sin código, para que pruebes vos)
+
+1. Dado `Vec<i32>`, imprimí solo los impares usando `iter().filter(...)`.
+2. Dado `Vec<String>`, creá un nuevo `Vec<usize>` con las longitudes (`map` + `collect`).
+3. En `Vec<Sensor>`, buscá el índice del sensor `"Temp"` con `position` y actualizá su `valor` sumando 5 (pista: `&mut [Sensor]`).
+4. Usá `enumerate` para imprimir `#idx: nombre=valor` de todos los sensores.
+5. Verificá con `any` si **algún** sensor supera `100`, y con `all` si **todos** son mayores a `0`.
+
+---
+
 
 
 
