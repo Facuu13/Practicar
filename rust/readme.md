@@ -283,6 +283,131 @@ fn main() {
 
 ---
 
+# 🔑 Concepto 1: Ownership (propiedad)
+
+En Rust, **cada valor en memoria tiene un único dueño**.
+Cuando el dueño sale de alcance, el valor se libera automáticamente.
+
+Ejemplo:
+
+```rust
+fn main() {
+    let s1 = String::from("Hola"); // s1 es el dueño del String
+    let s2 = s1;                   // propiedad se transfiere a s2
+
+    // println!("{}", s1);  ❌ ERROR: s1 ya no es dueño
+    println!("{}", s2);  // ✅ funciona
+}
+```
+
+👉 Cuando haces `let s2 = s1;`, el ownership pasa de `s1` a `s2`.
+Rust hace esto para evitar **doble liberación de memoria**.
+
+---
+
+# 🔑 Concepto 2: Borrowing (préstamo)
+
+Si quieres usar una variable sin perder la propiedad, puedes **prestarla como referencia** usando `&`.
+
+```rust
+fn main() {
+    let s1 = String::from("Hola");
+    let len = calcular_longitud(&s1); // paso referencia
+    println!("'{}' tiene longitud {}", s1, len);
+}
+
+fn calcular_longitud(s: &String) -> usize {
+    s.len() // uso la referencia sin tomar la propiedad
+}
+```
+
+👉 `&s1` significa "préstamo".
+El dueño sigue siendo `s1`, pero la función lo puede leer.
+
+---
+
+# 🔑 Concepto 3: Mutable Borrowing
+
+Si quieres modificar un valor prestado, usas `&mut`.
+⚠️ Regla: solo puede haber **un préstamo mutable a la vez** (para evitar condiciones de carrera).
+
+```rust
+fn main() {
+    let mut s = String::from("Hola");
+    cambiar(&mut s);
+    println!("{}", s);
+}
+
+fn cambiar(texto: &mut String) {
+    texto.push_str(", mundo!");
+}
+```
+
+👉 Así, se modifica `s` sin transferir la propiedad.
+
+---
+
+# 🔑 Concepto 4: Diferencia entre Copy y Move
+
+Algunos tipos simples (`i32`, `bool`, `f64`) se copian automáticamente porque son livianos.
+
+```rust
+fn main() {
+    let x = 5;
+    let y = x; // se copia, no se mueve
+
+    println!("x = {}, y = {}", x, y); // ambos siguen válidos
+}
+```
+
+👉 Tipos simples implementan el *trait* `Copy`.
+En cambio, `String` o `Vec` son pesados y se mueven por defecto.
+
+---
+
+# ⚡ Mini-ejemplo integrador
+
+```rust
+fn main() {
+    let mut numeros = vec![1, 2, 3];
+
+    // préstamo inmutable
+    imprimir(&numeros);
+
+    // préstamo mutable
+    agregar(&mut numeros);
+
+    println!("Final: {:?}", numeros);
+}
+
+fn imprimir(v: &Vec<i32>) {
+    println!("Vector: {:?}", v);
+}
+
+fn agregar(v: &mut Vec<i32>) {
+    v.push(4);
+}
+```
+
+👉 Resultado:
+
+```
+Vector: [1, 2, 3]
+Final: [1, 2, 3, 4]
+```
+
+---
+
+✅ Resumen:
+
+* Cada valor tiene **un dueño**.
+* Cuando el dueño muere, el valor se libera.
+* Se puede **prestar** con `&` (lectura) o `&mut` (modificación).
+* Tipos simples (`i32`, `bool`) se **copian**, no se mueven.
+
+---
+
+
 
 
 
