@@ -152,3 +152,137 @@ fn main() {
 
 ---
 
+Perfecto 🙌, vamos a profundizar en **colecciones en Rust**, porque son súper importantes y se usan en casi todos los programas.
+
+En Rust, las colecciones más comunes son:
+
+1. **Vectores (`Vec<T>`)** → listas dinámicas.
+2. **Strings (`String`)** → cadenas de texto mutables.
+3. **HashMap<K, V>** → pares clave-valor (como un diccionario en Python).
+
+---
+
+## 1. Vectores (`Vec<T>`)
+
+Son arrays que pueden crecer o achicarse. Se definen con `vec![]`.
+
+```rust
+fn main() {
+    let mut numeros = vec![10, 20, 30];  // vector con valores iniciales
+    numeros.push(40);                     // agregar un valor
+    numeros.remove(1);                    // elimina el valor en índice 1 (20)
+
+    println!("{:?}", numeros); // {:?} muestra el vector completo
+}
+```
+
+👉 Métodos útiles:
+
+* `.push(x)` → agrega al final
+* `.pop()` → saca el último elemento
+* `.len()` → devuelve la longitud
+* `.iter()` → itera sin consumir
+* `.contains(&x)` → pregunta si existe un valor
+
+Ejemplo con iteración:
+
+```rust
+fn main() {
+    let numeros = vec![1, 2, 3, 4, 5];
+
+    for n in &numeros {
+        println!("Número: {}", n);
+    }
+
+    println!("El vector tiene {} elementos", numeros.len());
+}
+```
+
+---
+
+## 2. Strings
+
+En Rust hay dos formas de manejar texto:
+
+* `&str` → slice inmutable (literal como `"hola"`).
+* `String` → cadena dinámica, mutable.
+
+```rust
+fn main() {
+    let mut saludo = String::from("Hola");
+    saludo.push_str(", Facu!"); // agrega texto
+
+    println!("{}", saludo);
+
+    // Slicing: obtener parte del string
+    let hola = &saludo[0..4];
+    println!("{}", hola);
+}
+```
+
+👉 Métodos útiles:
+
+* `.push_str("texto")` → agrega texto
+* `.len()` → longitud en bytes
+* `.replace("a", "x")` → reemplazo
+* `.split_whitespace()` → separar por espacios
+
+```rust
+fn main() {
+    let frase = String::from("Rust es poderoso y seguro");
+
+    for palabra in frase.split_whitespace() {
+        println!("Palabra: {}", palabra);
+    }
+}
+```
+
+---
+
+## 3. HashMap (clave → valor)
+
+Similar a un diccionario en Python o `map` en Java.
+
+```rust
+use std::collections::HashMap;
+
+fn main() {
+    let mut edades = HashMap::new();
+
+    edades.insert("Alice", 25);
+    edades.insert("Bob", 30);
+
+    println!("{:?}", edades);
+
+    // obtener un valor
+    if let Some(edad) = edades.get("Alice") {
+        println!("La edad de Alice es {}", edad);
+    }
+
+    // iterar sobre pares
+    for (nombre, edad) in &edades {
+        println!("{} tiene {} años", nombre, edad);
+    }
+}
+```
+
+👉 Métodos útiles:
+
+* `.insert(clave, valor)` → agrega o actualiza
+* `.get(&clave)` → devuelve `Option<&valor>`
+* `.remove(&clave)` → elimina
+* `.contains_key(&clave)` → pregunta si existe
+
+---
+
+✅ Resumen rápido:
+
+* **Vec** → listas ordenadas, indexadas por número.
+* **String** → texto mutable, más poderoso que `&str`.
+* **HashMap** → pares clave-valor, no ordenados.
+
+---
+
+
+
+
