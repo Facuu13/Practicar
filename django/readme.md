@@ -886,4 +886,49 @@ def crear_sensor(request):
 
 ---
 
+# 📌 Registrar un modelo en el admin de Django
+
+El **admin de Django** es una interfaz web que viene lista para gestionar datos (crear, editar, borrar) sin tener que programar nada.
+
+### Pasos
+
+1. En `sensores/admin.py` agregá:
+
+```python
+from django.contrib import admin
+from .models import Sensor
+
+@admin.register(Sensor)
+class SensorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nombre', 'valor', 'created_at')
+```
+
+2. Creá un superusuario para entrar al admin:
+
+```bash
+python manage.py createsuperuser
+```
+
+Te pedirá usuario, mail y contraseña.
+
+3. Iniciá el server:
+
+```bash
+python manage.py runserver
+```
+
+4. Entrá a:
+
+```
+http://127.0.0.1:8000/admin/
+```
+
+Iniciá sesión con el superusuario que creaste y vas a ver la tabla `Sensor`.
+
+---
+
+✅ Con eso ya podés gestionar sensores desde la interfaz gráfica.
+
+---
+
 
