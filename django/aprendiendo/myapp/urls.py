@@ -5,4 +5,5 @@ urlpatterns = [
         path('',views.hello),
         path('about/', views.about),
         path('sensores/', views.mostrar_sensores),
+        path('sensor/<int:sensor_id>/', views.mostrar_sensor),
 ]

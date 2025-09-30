@@ -667,4 +667,120 @@ Sensor.objects.all()[:5]   # los primeros 5
 
 ---
 
+¡Genial, Facu! 🙌
+Entonces seguimos con el siguiente bloque importante: **`urls.py`**.
+
+---
+
+# 📌 ¿Qué es `urls.py` en Django?
+
+* Es el archivo donde definís las **rutas de tu aplicación web**.
+* Una **ruta (URL)** indica qué vista (`views.py`) se debe ejecutar cuando alguien accede a cierta dirección.
+* Ejemplo:
+
+  * Entrás a `http://127.0.0.1:8000/sensores/`
+  * Django busca en `urls.py`
+  * Ejecuta la vista que le corresponde → devuelve la respuesta.
+
+👉 En pocas palabras: **URLs conectan el navegador/cliente con las vistas**.
+
+---
+
+# 🗂️ Tipos de `urls.py`
+
+Django maneja dos niveles:
+
+1. **urls.py del proyecto** (en la carpeta principal):
+
+   * Centraliza todas las apps.
+2. **urls.py de cada app** (ej: `myapp/urls.py`):
+
+   * Define las rutas específicas de esa app.
+
+---
+
+# 👨‍💻 Ejemplo 1: URL simple
+
+En `myapp/views.py` tenés:
+
+```python
+from django.http import HttpResponse
+
+def hola_mundo(request):
+    return HttpResponse("Hola desde Django")
+```
+
+En `myapp/urls.py`:
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("hola/", views.hola_mundo),
+]
+```
+
+En `mi_proyecto/urls.py` (global):
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("", include("myapp.urls")),   # incluye las rutas de la app
+]
+```
+
+👉 Ahora si vas a `http://127.0.0.1:8000/hola/`, ves el texto de la vista.
+
+---
+
+# 👨‍💻 Ejemplo 2: URL con parámetros
+
+Podés capturar valores de la URL para usarlos en la vista.
+
+En `myapp/views.py`:
+
+```python
+from django.http import HttpResponse
+
+def mostrar_sensor(request, sensor_id):
+    return HttpResponse(f"Mostrando el sensor con id {sensor_id}")
+```
+
+En `myapp/urls.py`:
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path("sensor/<int:sensor_id>/", views.mostrar_sensor),
+]
+```
+
+👉 Si entrás a `http://127.0.0.1:8000/sensor/5/` → devuelve `"Mostrando el sensor con id 5"`.
+
+---
+
+# 👩‍🏫 Cosas a tener en cuenta
+
+* `path("texto/", …)` → URL fija.
+* `path("<int:id>/", …)` → parámetro numérico.
+* `path("<str:nombre>/", …)` → parámetro string.
+* Usá `include()` para organizar mejor las rutas de cada app.
+
+---
+
+# ✅ Resumen de `urls.py`
+
+* Es el “mapa” de la aplicación.
+* Conecta **URL → Vista**.
+* Podés definir rutas fijas o con parámetros.
+* Se divide en **urls globales** (proyecto) y **urls locales** (app).
+
+---
+
 
