@@ -552,13 +552,6 @@ En Django hay **dos estilos**:
 
 ---
 
-Muy buena observación 👌
-Tenés razón: antes de seguir con `urls.py`, conviene detenernos y entender bien las **consultas con el ORM**, porque en `views.py` ya las estamos usando. Si no, parece que hago “magia negra” y no se entiende.
-
-Vamos a ver lo básico del **ORM de Django**.
-
----
-
 # 📌 ¿Qué es el ORM?
 
 * **ORM = Object Relational Mapper**.
