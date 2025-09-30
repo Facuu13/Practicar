@@ -1,5 +1,8 @@
 from django.http import HttpResponse
 from .models import Sensor, Lectura
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .serializers import SensorSerializer
 
 # Create your views here.
 
@@ -17,3 +20,18 @@ def mostrar_sensores(request):
 def mostrar_sensor(request, sensor_id):
     s = Sensor.objects.get(id=sensor_id)
     return HttpResponse(f"Sensor: {s.nombre}, Valor: {s.valor}")
+
+
+@api_view(['GET'])
+def listar_sensores(request):
+    sensores = Sensor.objects.all()
+    serializer = SensorSerializer(sensores, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def crear_sensor(request):
+    serializer = SensorSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  # crea el Sensor en la DB
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)

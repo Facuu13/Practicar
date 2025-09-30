@@ -783,4 +783,107 @@ urlpatterns = [
 
 ---
 
+# 📌 ¿Qué es `serializers.py`?
+
+* Es el archivo donde definís los **serializadores**.
+* Un **serializer** convierte:
+
+  * Objetos de Django (ej: un `Sensor`) → JSON (para enviar al cliente).
+  * JSON recibido en un request → objeto de Django (para guardar en la DB).
+* Es el puente entre el **modelo** y el **mundo exterior** (navegador, Postman, app móvil, etc.).
+
+👉 Sin serializer, no podés trabajar cómodamente con JSON.
+
+---
+
+# 👨‍💻 Ejemplo básico
+
+En `sensores/serializers.py`:
+
+```python
+from rest_framework import serializers
+from .models import Sensor
+
+class SensorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sensor
+        fields = ['id', 'nombre', 'valor']
+```
+
+Explicación:
+
+* `SensorSerializer` → define cómo se transforma un `Sensor`.
+* `model = Sensor` → se basa en ese modelo.
+* `fields = [...]` → qué campos incluir en el JSON.
+
+---
+
+# 🔄 Cómo se usa
+
+En una vista (ejemplo simplificado):
+
+```python
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Sensor
+from .serializers import SensorSerializer
+
+@api_view(['GET'])
+def listar_sensores(request):
+    sensores = Sensor.objects.all()
+    serializer = SensorSerializer(sensores, many=True)
+    return Response(serializer.data)
+```
+
+👉 Paso a paso:
+
+1. Traemos todos los sensores.
+2. El serializer los transforma a JSON (`serializer.data`).
+3. Lo devolvemos en la response.
+
+---
+
+# 👨‍💻 Ejemplo de entrada JSON → objeto
+
+Supongamos que hacemos un **POST** con:
+
+```json
+{
+  "nombre": "humedad",
+  "valor": 65
+}
+```
+
+En la vista:
+
+```python
+@api_view(['POST'])
+def crear_sensor(request):
+    serializer = SensorSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()  # crea el Sensor en la DB
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+```
+
+👉 El serializer valida los datos y los guarda.
+
+---
+
+# 🔑 Ventajas de los serializers
+
+* Validan automáticamente (ej: que `valor` sea un número).
+* Evitan tener que armar JSON a mano.
+* Integran fácil con **views genéricas** (`ListCreateAPIView`, `RetrieveUpdateDestroyAPIView`).
+
+---
+
+# ✅ Resumen
+
+* `serializers.py` convierte **Model ↔ JSON**.
+* Facilita tanto leer (GET) como crear/actualizar datos (POST/PUT).
+* Es la pieza clave para que Django se comporte como un **backend/API REST**.
+
+---
+
 
