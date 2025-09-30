@@ -464,3 +464,214 @@ Sensor.objects.filter(valor__gt=20)
 
 ---
 
+# 📌 ¿Qué es `views.py` en Django?
+
+* Es el archivo donde definís las **vistas** de tu aplicación.
+* Una **vista** es simplemente una función (o clase) que recibe un **request HTTP** y devuelve una **response HTTP**.
+* Piensalo así:
+
+  * **URL** → llama a una **vista** → que procesa lógica y devuelve algo (HTML, JSON, texto, etc.).
+
+👉 En backend puro, la vista suele devolver **JSON**.
+
+---
+
+# 👨‍💻 Ejemplo 1: Vista como función
+
+Archivo: `myapp/views.py`
+
+```python
+from django.http import HttpResponse
+
+def hola_mundo(request):
+    return HttpResponse("Hola desde Django")
+```
+
+* Recibe un `request` (lo que envía el navegador o cliente).
+* Devuelve un `HttpResponse` con un texto.
+* Si lo conectás a una URL, al entrar en el navegador vas a ver ese texto.
+
+---
+
+# 👨‍💻 Ejemplo 2: Vista que usa el modelo
+
+Supongamos que ya tenemos el modelo `Sensor`.
+
+```python
+from django.http import HttpResponse
+from .models import Sensor
+
+def mostrar_sensores(request):
+    sensores = Sensor.objects.all()
+    texto = ", ".join([f"{s.nombre}: {s.valor}" for s in sensores])
+    return HttpResponse(texto)
+```
+
+👉 Paso a paso:
+
+1. `Sensor.objects.all()` consulta la DB.
+2. Arma un string con los datos.
+3. Lo devuelve como texto plano.
+
+---
+
+# 👩‍🏫 Tipos de vistas
+
+En Django hay **dos estilos**:
+
+1. **Function-Based Views (FBV)** → como los ejemplos de arriba.
+
+   * Simples, fáciles para empezar.
+
+2. **Class-Based Views (CBV)** → vistas como clases, con métodos (`get`, `post`, etc.).
+   Ejemplo:
+
+   ```python
+   from django.http import JsonResponse
+   from django.views import View
+   from .models import Sensor
+
+   class SensorList(View):
+       def get(self, request):
+           sensores = list(Sensor.objects.values())
+           return JsonResponse(sensores, safe=False)
+   ```
+
+   * `get` maneja peticiones GET.
+   * `post` manejaría POST, etc.
+   * Se usan mucho en proyectos grandes porque son más ordenadas y reusables.
+
+---
+
+# ✅ Resumen de `views.py`
+
+* Acá va la **lógica** de tu aplicación.
+* Cada vista recibe un `request` y devuelve una `response`.
+* Podés usarlas como función o como clase.
+* Normalmente se conectan a los modelos (`models.py`) para devolver datos.
+
+---
+
+Muy buena observación 👌
+Tenés razón: antes de seguir con `urls.py`, conviene detenernos y entender bien las **consultas con el ORM**, porque en `views.py` ya las estamos usando. Si no, parece que hago “magia negra” y no se entiende.
+
+Vamos a ver lo básico del **ORM de Django**.
+
+---
+
+# 📌 ¿Qué es el ORM?
+
+* **ORM = Object Relational Mapper**.
+* Te permite trabajar con la **base de datos usando objetos de Python**, sin tener que escribir SQL directamente.
+* Ventaja: código más limpio, portable (funciona con SQLite, PostgreSQL, MySQL, etc. sin cambiar nada).
+
+👉 Ejemplo SQL vs ORM:
+
+SQL:
+
+```sql
+SELECT * FROM sensor WHERE valor > 20;
+```
+
+ORM:
+
+```python
+Sensor.objects.filter(valor__gt=20)
+```
+
+---
+
+# 👨‍💻 Ejemplos básicos con el ORM
+
+## 1. Crear registros
+
+```python
+# Forma larga
+s = Sensor(nombre="temp1", valor=25)
+s.save()
+
+# Forma corta
+Sensor.objects.create(nombre="hum1", valor=60)
+```
+
+---
+
+## 2. Leer registros
+
+```python
+# Todos los registros
+Sensor.objects.all()
+
+# Filtrar (WHERE)
+Sensor.objects.filter(valor__gt=20)     # valor > 20
+Sensor.objects.filter(nombre="temp1")   # nombre = 'temp1'
+
+# Uno solo (si existe)
+Sensor.objects.get(id=1)   # trae el sensor con id=1
+```
+
+⚠️ `get` lanza error si no encuentra nada o hay más de uno.
+En cambio `filter` devuelve un queryset (lista).
+
+---
+
+## 3. Actualizar registros
+
+```python
+s = Sensor.objects.get(id=1)
+s.valor = 30
+s.save()
+```
+
+---
+
+## 4. Borrar registros
+
+```python
+s = Sensor.objects.get(id=1)
+s.delete()
+```
+
+---
+
+# 📊 Consultas más útiles
+
+* Comparadores:
+
+  * `__gt` → mayor que
+  * `__lt` → menor que
+  * `__gte` → mayor o igual
+  * `__lte` → menor o igual
+  * `__contains` → contiene (como `LIKE`)
+  * `__startswith` → empieza con
+
+Ejemplo:
+
+```python
+Sensor.objects.filter(nombre__startswith="t")
+```
+
+* Ordenar resultados:
+
+```python
+Sensor.objects.all().order_by("valor")     # ascendente
+Sensor.objects.all().order_by("-valor")    # descendente
+```
+
+* Limitar resultados:
+
+```python
+Sensor.objects.all()[:5]   # los primeros 5
+```
+
+---
+
+# ✅ Resumen
+
+* El **ORM** reemplaza SQL por métodos de Python.
+* Lo más usado: `create`, `all`, `filter`, `get`, `update`, `delete`.
+* Tiene comparadores (`__gt`, `__lt`, etc.) y ordenaciones (`order_by`).
+
+---
+
+
