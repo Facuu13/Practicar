@@ -357,3 +357,110 @@ Podés contestar así en la entrevista:
 > “No trabajé directamente en producción con Django, pero entiendo su arquitectura MTV, el uso de modelos con ORM, vistas y templates. Estuve practicando un mini-proyecto IoT en Django, así que me resulta familiar cómo estructurar una app y cómo manejar datos desde una base de datos hasta la web. Además, como tengo experiencia en Python y bases de datos, me adapto rápido.”
 
 ---
+
+
+¡Entendido! 🙌
+Vamos a ir **pieza por pieza**, para que todo te quede bien claro. Empezamos con lo primero y más importante en Django: **`models.py`**.
+
+---
+
+# 📌 ¿Qué es `models.py` en Django?
+
+* Es el archivo donde definís tus **modelos de datos**.
+* Un **modelo** en Django es una **clase de Python** que representa una **tabla en la base de datos**.
+* Cada **atributo de la clase** representa una **columna de la tabla**.
+
+👉 Django se encarga de traducir esas clases a SQL usando el **ORM (Object-Relational Mapper)**.
+
+---
+
+# 📊 Ejemplo básico
+
+Archivo: `sensores/models.py`
+
+```python
+from django.db import models
+
+class Sensor(models.Model):
+    nombre = models.CharField(max_length=50)
+    valor = models.IntegerField()
+```
+
+Esto significa:
+
+* Clase **Sensor** → tabla `sensores_sensor` en la base de datos (Django agrega el nombre de la app antes).
+* Campo `nombre` → columna de tipo texto (`VARCHAR(50)`).
+* Campo `valor` → columna de tipo entero (`INT`).
+* Django automáticamente crea un campo `id` como **clave primaria (primary key)**.
+
+---
+
+# 🛠️ Tipos de campos comunes
+
+Django tiene muchos tipos de campos (`Field`), algunos son:
+
+* `CharField(max_length=…)` → texto corto.
+* `TextField()` → texto largo.
+* `IntegerField()` → enteros.
+* `FloatField()` → números decimales.
+* `BooleanField()` → True/False.
+* `DateTimeField(auto_now_add=True)` → fecha/hora al crear.
+* `ForeignKey()` → relación con otra tabla.
+
+👉 Ejemplo con varios campos:
+
+```python
+class Lectura(models.Model):
+    sensor = models.ForeignKey(Sensor, on_delete=models.CASCADE)
+    valor = models.FloatField()
+    fecha = models.DateTimeField(auto_now_add=True)
+```
+
+Esto crea una tabla de lecturas donde cada fila está vinculada a un sensor.
+
+---
+
+# ⚡ Cómo usar los modelos (ORM)
+
+Después de definirlos, corrés:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Esto crea las tablas en la DB.
+Luego podés usar el ORM desde el **shell de Django**:
+
+```bash
+python manage.py shell
+```
+
+```python
+from sensores.models import Sensor
+
+# Crear un sensor
+s = Sensor(nombre="Temperatura", valor=25)
+s.save()
+
+# Consultar todos
+Sensor.objects.all()
+# → <QuerySet [<Sensor: Sensor object (1)>]>
+
+# Filtrar
+Sensor.objects.filter(valor__gt=20)
+```
+
+👉 El ORM traduce tus comandos Python a SQL automáticamente.
+
+---
+
+# ✅ Resumen de `models.py`
+
+* Define la **estructura de tus datos** (tablas y columnas).
+* Cada clase = una tabla.
+* Cada atributo = una columna.
+* Se usa junto con el ORM para crear, leer, actualizar y borrar datos sin escribir SQL.
+
+---
+
