@@ -9,3 +9,8 @@ package.json
 
 #_pycache__
 __pycache__/
+
+# ignorar archivos de salida de C++
+*.out
+*.exe
+*.o
