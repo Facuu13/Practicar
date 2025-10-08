@@ -75,3 +75,128 @@ int main() {
    ```
 
 ---
+
+Excelente 👌
+Vamos a ver **cómo se usa el prefijo `std::`** y luego seguimos directamente con el **Módulo 2: Variables y tipos de datos básicos**.
+
+---
+
+## 🧩 Prefijo `std::` en C++
+
+### 🧠 Teoría
+
+En C++, la librería estándar está dentro del **namespace `std`** (abreviatura de *standard*).
+Un *namespace* es un “espacio de nombres” que agrupa funciones, clases y variables para evitar conflictos de nombres.
+
+Cuando escribís:
+
+```cpp
+using namespace std;
+```
+
+le estás diciendo al compilador:
+
+> “No hace falta que escriba `std::` antes de los nombres de la librería estándar.”
+
+Pero si **no usás** esa línea, tenés que **especificar el espacio de nombres manualmente**, con el prefijo `std::`.
+
+---
+
+### 💻 Ejemplo sin `using namespace std`
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Hola, mundo sin using namespace std!" << std::endl;
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `std::cout` → flujo de salida dentro del namespace `std`.
+* `std::endl` → salto de línea dentro del namespace `std`.
+
+Ambas cosas están definidas en la biblioteca `<iostream>`, pero dentro del espacio `std`.
+
+> 🟢 **Buena práctica:**
+> En proyectos grandes o profesionales, se recomienda **no usar** `using namespace std;` para evitar conflictos de nombres.
+> En programas pequeños o didácticos, sí se puede usar para simplificar.
+
+---
+
+## 🧩 Módulo 2: Variables y tipos de datos básicos
+
+### 🧠 Teoría
+
+Las **variables** son espacios en memoria donde guardamos datos con un tipo específico.
+En C++, todos los datos tienen un **tipo definido** (es un lenguaje fuertemente tipado).
+
+| Tipo     | Descripción                           | Ejemplo de valor |
+| -------- | ------------------------------------- | ---------------- |
+| `int`    | Entero                                | `10`             |
+| `float`  | Decimal simple precisión              | `3.14`           |
+| `double` | Decimal doble precisión               | `3.141592`       |
+| `char`   | Carácter único                        | `'A'`            |
+| `string` | Cadena de texto (necesita `<string>`) | `"Hola"`         |
+| `bool`   | Verdadero/Falso                       | `true` / `false` |
+
+---
+
+### 💻 Ejemplo 2: Variables y entrada/salida
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    int edad;
+    std::string nombre;
+    double altura;
+
+    std::cout << "Ingresa tu nombre: ";
+    std::cin >> nombre;   // lee una palabra (sin espacios)
+    
+    std::cout << "Ingresa tu edad: ";
+    std::cin >> edad;
+    
+    std::cout << "Ingresa tu altura (en metros): ";
+    std::cin >> altura;
+
+    std::cout << "\nHola " << nombre << ", tienes " << edad
+              << " años y mides " << altura << " metros." << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+### 🧠 Notas importantes
+
+* `cin` → lee desde la entrada estándar (teclado).
+* `>>` → operador de extracción (obtiene datos del flujo).
+* `cout` → operador de inserción (envía datos al flujo de salida).
+* Si querés leer frases con espacios (por ejemplo, “Juan Pérez”), debés usar:
+
+  ```cpp
+  std::getline(std::cin, nombre);
+  ```
+
+---
+
+### 💪 Ejercicio para practicar
+
+Modificá el programa para:
+
+1. Pedir el **nombre completo** del usuario (usando `getline`).
+2. Calcular el **año de nacimiento** suponiendo el año actual (por ejemplo, 2025).
+3. Mostrar un mensaje como:
+
+   ```
+   Hola Juan Pérez, naciste en 1997.
+   ```
+
+---
+
