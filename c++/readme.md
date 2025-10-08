@@ -1,5 +1,3 @@
-Perfecto 👍
-Vamos a hacer un **repaso completo de C++ desde cero**, avanzando tema por tema con **teoría clara + ejemplo sencillo** en cada paso.
 
 ---
 
