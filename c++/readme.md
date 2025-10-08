@@ -708,3 +708,210 @@ if (numero % 2 == 0)
 ```
 
 ---
+
+## 🧩 Módulo 6: Arreglos (`array`) y vectores (`std::vector`)
+
+### 🧠 Concepto general
+
+Un **arreglo (array)** es una colección de elementos **del mismo tipo**, almacenados de forma contigua en memoria.
+Sirve para guardar, por ejemplo, una lista de temperaturas, IDs de sensores, etc.
+
+Un **vector (`std::vector`)** es una versión moderna y flexible del array que puede **cambiar de tamaño dinámicamente**.
+
+---
+
+## 🔹 1. Arreglos estáticos
+
+### 💡 Definición
+
+```cpp
+tipo nombre[tamaño];
+```
+
+Ejemplo:
+
+```cpp
+int numeros[5];
+```
+
+👉 Crea un arreglo de 5 enteros (índices 0 a 4).
+
+---
+
+### 💻 Ejemplo 1: inicialización y acceso
+
+```cpp
+#include <iostream>
+
+int main() {
+    int numeros[5] = {10, 20, 30, 40, 50};
+
+    std::cout << "Elementos del arreglo:" << std::endl;
+    for (int i = 0; i < 5; i++) {
+        std::cout << "Índice " << i << ": " << numeros[i] << std::endl;
+    }
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `numeros[i]` accede al elemento en la posición `i`.
+* El primer índice es **0**.
+* Si accedés fuera del rango (por ejemplo `numeros[5]`), el resultado es **indefinido** (error lógico).
+
+---
+
+### 💻 Ejemplo 2: lectura del usuario
+
+```cpp
+#include <iostream>
+
+int main() {
+    int valores[3];
+
+    for (int i = 0; i < 3; i++) {
+        std::cout << "Ingresa un número (" << i + 1 << "): ";
+        std::cin >> valores[i];
+    }
+
+    std::cout << "Los números ingresados son: ";
+    for (int i = 0; i < 3; i++) {
+        std::cout << valores[i] << " ";
+    }
+
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+---
+
+## 🔹 2. Vectores dinámicos (`std::vector`)
+
+### 💡 Teoría
+
+`std::vector` es parte de la **STL (Standard Template Library)** y **se ajusta automáticamente** al tamaño necesario.
+Requiere incluir la librería `<vector>`.
+
+👉 Ventajas sobre los arreglos:
+
+* No necesitás definir el tamaño fijo.
+* Podés **agregar o eliminar elementos** fácilmente.
+* Tiene funciones útiles (`push_back`, `size`, `at`, etc.).
+
+---
+
+### 💻 Ejemplo 3: uso básico de `std::vector`
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> numeros;
+
+    numeros.push_back(10);
+    numeros.push_back(20);
+    numeros.push_back(30);
+
+    std::cout << "El vector contiene " << numeros.size() << " elementos:" << std::endl;
+
+    for (std::size_t i = 0; i < numeros.size(); i++) {
+        std::cout << "Elemento " << i << ": " << numeros[i] << std::endl;
+    }
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `push_back(valor)` → agrega un nuevo elemento al final.
+* `size()` → devuelve cuántos elementos tiene.
+* `numeros[i]` → accede a un elemento (como en un array).
+* `std::size_t` es el tipo recomendado para índices (evita warnings).
+
+---
+
+### 💻 Ejemplo 4: recorrer un vector con `for` moderno
+
+Desde C++11 podés usar un **bucle simplificado**:
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> datos = {5, 10, 15, 20};
+
+    for (int valor : datos) {
+        std::cout << "Valor: " << valor << std::endl;
+    }
+
+    return 0;
+}
+```
+
+➡️ Esto se llama **range-based for loop**.
+Itera automáticamente por cada elemento del vector.
+
+---
+
+### 💻 Ejemplo 5: promedio de valores en un vector
+
+```cpp
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> lecturas;
+    int cantidad;
+    int valor;
+
+    std::cout << "¿Cuántas lecturas querés ingresar? ";
+    std::cin >> cantidad;
+
+    for (int i = 0; i < cantidad; i++) {
+        std::cout << "Lectura " << i + 1 << ": ";
+        std::cin >> valor;
+        lecturas.push_back(valor);
+    }
+
+    int suma = 0;
+    for (int x : lecturas) {
+        suma += x;
+    }
+
+    double promedio = static_cast<double>(suma) / lecturas.size();
+
+    std::cout << "Promedio: " << promedio << std::endl;
+
+    return 0;
+}
+```
+
+**Nuevos conceptos:**
+
+* `static_cast<double>(suma)` → convierte un entero a `double` para evitar pérdida de precisión.
+* `lecturas.size()` → devuelve el tamaño del vector.
+
+---
+
+### 💪 Ejercicio propuesto
+
+1. Creá un vector de tipo `double` llamado `temperaturas`.
+2. Permití al usuario ingresar 5 temperaturas.
+3. Mostrá:
+
+   * El promedio.
+   * La temperatura máxima y mínima.
+
+👉 Tip: podés recorrer el vector y comparar:
+
+```cpp
+if (temp[i] > max) max = temp[i];
+```
+
+---
