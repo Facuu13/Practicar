@@ -915,3 +915,220 @@ if (temp[i] > max) max = temp[i];
 ```
 
 ---
+
+## 🧩 Módulo 7: Estructuras (`struct`)
+
+### 🧠 Concepto teórico
+
+Una **estructura** (`struct`) te permite agrupar **distintos tipos de datos bajo un mismo nombre**.
+
+Sirve para representar objetos reales o lógicos, como por ejemplo un **sensor**, un **estudiante**, o un **producto**, con todos sus atributos.
+
+📘 En palabras simples:
+
+> Una `struct` es como un "molde" que define qué información tiene un objeto.
+
+---
+
+### 💡 Sintaxis general
+
+```cpp
+struct NombreEstructura {
+    tipo atributo1;
+    tipo atributo2;
+    // ...
+};
+```
+
+Luego podés crear variables (o “instancias”) de ese tipo:
+
+```cpp
+NombreEstructura variable;
+```
+
+---
+
+## 💻 Ejemplo 1: estructura básica
+
+```cpp
+#include <iostream>
+#include <string>
+
+struct Sensor {
+    std::string nombre;
+    std::string tipo;
+    double valor;
+};
+
+int main() {
+    Sensor s1;
+
+    s1.nombre = "Sensor de temperatura";
+    s1.tipo = "TEMP";
+    s1.valor = 23.7;
+
+    std::cout << "Nombre: " << s1.nombre << std::endl;
+    std::cout << "Tipo: " << s1.tipo << std::endl;
+    std::cout << "Valor: " << s1.valor << " °C" << std::endl;
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* Se define un `struct Sensor` con tres campos.
+* Luego se crea un objeto `s1` y se accede a sus atributos con el operador `.`.
+
+---
+
+## 💻 Ejemplo 2: inicialización directa
+
+También podés inicializar una estructura al momento de crearla:
+
+```cpp
+#include <iostream>
+#include <string>
+
+struct Sensor {
+    std::string nombre;
+    std::string tipo;
+    double valor;
+};
+
+int main() {
+    Sensor s1 = {"Sensor de humedad", "HUM", 54.2};
+
+    std::cout << s1.nombre << " (" << s1.tipo << "): " << s1.valor << "%" << std::endl;
+    return 0;
+}
+```
+
+---
+
+## 💻 Ejemplo 3: arreglo (o vector) de estructuras
+
+Esto es muy útil para manejar **varios objetos del mismo tipo**, por ejemplo varios sensores.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <string>
+
+struct Sensor {
+    std::string nombre;
+    std::string tipo;
+    double valor;
+};
+
+int main() {
+    std::vector<Sensor> sensores;
+
+    sensores.push_back({"Temperatura", "TEMP", 22.5});
+    sensores.push_back({"Humedad", "HUM", 60.0});
+    sensores.push_back({"Luz", "LUX", 150.0});
+
+    std::cout << "Listado de sensores:" << std::endl;
+    for (const Sensor &s : sensores) {
+        std::cout << "- " << s.nombre << " (" << s.tipo << "): " << s.valor << std::endl;
+    }
+
+    return 0;
+}
+```
+
+**Notas:**
+
+* Se usa `const Sensor &s` para evitar copiar el objeto en cada iteración.
+* `push_back` agrega cada sensor al vector.
+
+---
+
+## 💻 Ejemplo 4: funciones con estructuras
+
+Podés pasar estructuras como parámetros (por valor o referencia).
+
+```cpp
+#include <iostream>
+#include <string>
+
+struct Sensor {
+    std::string nombre;
+    std::string tipo;
+    double valor;
+};
+
+void mostrar_sensor(const Sensor &s) {
+    std::cout << s.nombre << " [" << s.tipo << "] = " << s.valor << std::endl;
+}
+
+int main() {
+    Sensor s1 = {"Sensor de luz", "LUX", 125.8};
+    mostrar_sensor(s1);
+    return 0;
+}
+```
+
+**Explicación:**
+
+* Se pasa el `Sensor` **por referencia constante** (`const &`) para no copiarlo, pero evitar modificarlo.
+* Dentro de la función se accede igual con `s.nombre`, `s.tipo`, etc.
+
+---
+
+## 💻 Ejemplo 5: actualizar valores con paso por referencia
+
+```cpp
+#include <iostream>
+#include <string>
+
+struct Sensor {
+    std::string nombre;
+    std::string tipo;
+    double valor;
+};
+
+void actualizar_valor(Sensor &s, double nuevo_valor) {
+    s.valor = nuevo_valor;
+}
+
+int main() {
+    Sensor s1 = {"Sensor de temperatura", "TEMP", 22.0};
+    std::cout << "Antes: " << s1.valor << " °C" << std::endl;
+
+    actualizar_valor(s1, 25.3);
+    std::cout << "Después: " << s1.valor << " °C" << std::endl;
+
+    return 0;
+}
+```
+
+---
+
+## 🧠 Diferencia entre `struct` y `class`
+
+En C++ moderno, `struct` y `class` son casi iguales.
+La **única diferencia** es que:
+
+* En `struct`, los miembros son **públicos por defecto**.
+* En `class`, los miembros son **privados por defecto**.
+
+👉 Por eso las estructuras se usan para **datos simples**, y las clases para **objetos con lógica y encapsulamiento** (veremos eso en el próximo módulo).
+
+---
+
+## 💪 Ejercicio propuesto
+
+1. Definí un `struct` llamado `Empleado` con:
+
+   * `std::string nombre`
+   * `int edad`
+   * `double salario`
+2. Creá un vector de empleados (`std::vector<Empleado>`).
+3. Permití ingresar los datos de tres empleados desde teclado.
+4. Mostrá:
+
+   * El empleado con el **mayor salario**.
+   * El **promedio** de edad del grupo.
+
+---
