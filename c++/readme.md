@@ -76,11 +76,6 @@ int main() {
 
 ---
 
-Excelente 👌
-Vamos a ver **cómo se usa el prefijo `std::`** y luego seguimos directamente con el **Módulo 2: Variables y tipos de datos básicos**.
-
----
-
 ## 🧩 Prefijo `std::` en C++
 
 ### 🧠 Teoría
@@ -199,4 +194,167 @@ Modificá el programa para:
    ```
 
 ---
+
+## 🧩 ¿Por qué `std::string` y no `std::int`?
+
+### 🧠 Tipos primitivos vs tipos definidos en la biblioteca estándar
+
+En C++ existen **dos tipos de datos**:
+
+1. **Tipos primitivos** → vienen del lenguaje base (de C).
+   Están *“integrados”* en el compilador, no pertenecen a ningún namespace.
+   Ejemplos:
+
+   ```cpp
+   int, float, double, char, bool
+   ```
+
+   👉 Por eso **no llevan `std::`**, porque no están dentro del espacio de nombres `std`.
+
+2. **Tipos definidos en la biblioteca estándar (STL)** → son clases y estructuras que *sí* están en el namespace `std`.
+   Ejemplos:
+
+   ```cpp
+   std::string, std::vector, std::map, std::cout, std::cin
+   ```
+
+   👉 Por eso **sí llevan `std::`**: porque están definidos dentro del espacio `std`.
+
+---
+
+### 💡 Ejemplo comparativo
+
+```cpp
+#include <iostream>
+#include <string>
+
+int main() {
+    int edad = 30;                  // tipo primitivo → sin std::
+    double altura = 1.80;           // tipo primitivo
+    std::string nombre = "Facundo"; // tipo de la STL → con std::
+
+    std::cout << "Nombre: " << nombre << std::endl;
+    std::cout << "Edad: " << edad << ", Altura: " << altura << " m" << std::endl;
+
+    return 0;
+}
+```
+
+> 🔹 `int` y `double` → no necesitan `std::`
+> 🔹 `std::string` → sí, porque está definido dentro del espacio `std`
+> 🔹 `std::cout` y `std::endl` → también están dentro de `std`
+
+---
+
+## 🧩 Módulo 3: Operadores y estructuras condicionales
+
+### 🧠 Teoría
+
+Los **operadores** y **estructuras condicionales** permiten tomar decisiones y realizar cálculos.
+
+---
+
+### ⚙️ Operadores básicos
+
+| Tipo        | Ejemplo                          | Descripción                                   |        |              |
+| ----------- | -------------------------------- | --------------------------------------------- | ------ | ------------ |
+| Aritméticos | `+`, `-`, `*`, `/`, `%`          | Suma, resta, multiplicación, división, módulo |        |              |
+| Comparación | `==`, `!=`, `<`, `>`, `<=`, `>=` | Comparan valores y devuelven `true` o `false` |        |              |
+| Lógicos     | `&&`, `                          |                                               | `, `!` | AND, OR, NOT |
+| Asignación  | `=`, `+=`, `-=`, `*=`, `/=`      | Asignar o modificar valores                   |        |              |
+
+---
+
+### 🧩 Estructuras condicionales
+
+#### `if` / `else if` / `else`
+
+Permiten ejecutar bloques de código según una condición.
+
+```cpp
+#include <iostream>
+
+int main() {
+    int numero;
+
+    std::cout << "Ingresa un número: ";
+    std::cin >> numero;
+
+    if (numero > 0) {
+        std::cout << "El número es positivo." << std::endl;
+    } else if (numero < 0) {
+        std::cout << "El número es negativo." << std::endl;
+    } else {
+        std::cout << "El número es cero." << std::endl;
+    }
+
+    return 0;
+}
+```
+
+---
+
+#### `switch`
+
+Se usa cuando hay muchas comparaciones sobre una misma variable.
+
+```cpp
+#include <iostream>
+
+int main() {
+    int opcion;
+
+    std::cout << "Menú principal:" << std::endl;
+    std::cout << "1. Encender" << std::endl;
+    std::cout << "2. Apagar" << std::endl;
+    std::cout << "3. Reiniciar" << std::endl;
+    std::cout << "Elige una opción: ";
+    std::cin >> opcion;
+
+    switch (opcion) {
+        case 1:
+            std::cout << "Sistema encendido." << std::endl;
+            break;
+        case 2:
+            std::cout << "Sistema apagado." << std::endl;
+            break;
+        case 3:
+            std::cout << "Reiniciando sistema..." << std::endl;
+            break;
+        default:
+            std::cout << "Opción no válida." << std::endl;
+            break;
+    }
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `switch` evalúa `opcion`.
+* Cada `case` es un valor posible.
+* `break` evita que se ejecuten los siguientes casos.
+* `default` se ejecuta si ninguno coincide.
+
+---
+
+### 💪 Ejercicio práctico
+
+Crea un programa que:
+
+1. Pida al usuario dos números enteros.
+2. Pregunte qué operación quiere realizar: `+`, `-`, `*`, `/`.
+3. Use `switch` para ejecutar la operación y mostrar el resultado.
+   Ejemplo:
+
+   ```
+   Ingresa primer número: 6
+   Ingresa segundo número: 3
+   Operación (+, -, *, /): *
+   Resultado: 18
+   ```
+
+---
+
 
