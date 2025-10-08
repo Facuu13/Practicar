@@ -357,4 +357,169 @@ Crea un programa que:
 
 ---
 
+## 🧩 Módulo 4: Bucles o estructuras repetitivas
+
+### 🧠 Teoría general
+
+Los **bucles** permiten repetir un bloque de código varias veces.
+Son esenciales para tareas como recorrer listas, leer sensores, calcular promedios, etc.
+
+Los tres principales en C++ son:
+
+1. `for` → cuando sabés cuántas veces vas a repetir algo.
+2. `while` → cuando repetís mientras una condición sea verdadera.
+3. `do while` → igual que `while`, pero se ejecuta al menos una vez.
+
+---
+
+## 🔹 1. Bucle `for`
+
+### 💡 Estructura general
+
+```cpp
+for (inicialización; condición; incremento) {
+    // código a repetir
+}
+```
+
+### 💻 Ejemplo
+
+```cpp
+#include <iostream>
+
+int main() {
+    std::cout << "Contador ascendente:" << std::endl;
+
+    for (int i = 1; i <= 5; i++) {
+        std::cout << "Iteración " << i << std::endl;
+    }
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `int i = 1` → valor inicial.
+* `i <= 5` → condición de repetición.
+* `i++` → se ejecuta al final de cada ciclo (incrementa `i` en 1).
+
+👉 El bucle se ejecuta **mientras la condición sea verdadera**.
+
+---
+
+## 🔹 2. Bucle `while`
+
+### 💡 Estructura general
+
+```cpp
+while (condición) {
+    // código a repetir
+}
+```
+
+### 💻 Ejemplo
+
+```cpp
+#include <iostream>
+
+int main() {
+    int contador = 0;
+
+    std::cout << "Contador con while:" << std::endl;
+
+    while (contador < 3) {
+        std::cout << "Valor: " << contador << std::endl;
+        contador++; // importante incrementar, si no queda en bucle infinito
+    }
+
+    return 0;
+}
+```
+
+---
+
+## 🔹 3. Bucle `do while`
+
+### 💡 Estructura general
+
+```cpp
+do {
+    // código a repetir
+} while (condición);
+```
+
+### 💻 Ejemplo
+
+```cpp
+#include <iostream>
+
+int main() {
+    int numero;
+
+    do {
+        std::cout << "Ingresa un número positivo: ";
+        std::cin >> numero;
+    } while (numero < 0);
+
+    std::cout << "Número válido: " << numero << std::endl;
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* El `do` ejecuta **al menos una vez**, incluso si la condición es falsa al inicio.
+* Ideal cuando querés validar datos de entrada del usuario.
+
+---
+
+## 🔹 Palabras clave útiles
+
+| Palabra    | Función                                                   |
+| ---------- | --------------------------------------------------------- |
+| `break`    | Sale del bucle antes de tiempo                            |
+| `continue` | Salta al siguiente ciclo sin ejecutar el resto del bloque |
+
+### 💻 Ejemplo
+
+```cpp
+#include <iostream>
+
+int main() {
+    for (int i = 1; i <= 5; i++) {
+        if (i == 3) {
+            std::cout << "Salteando el número 3" << std::endl;
+            continue; // salta al siguiente ciclo
+        }
+        if (i == 5) {
+            std::cout << "Saliendo del bucle en i = " << i << std::endl;
+            break; // termina el bucle completamente
+        }
+        std::cout << "Valor actual: " << i << std::endl;
+    }
+
+    return 0;
+}
+```
+
+---
+
+## 💪 Ejercicio para vos
+
+1. Escribí un programa que pida un número `n` y muestre la **tabla de multiplicar** del 1 al 10 usando un bucle `for`.
+   Ejemplo:
+
+   ```
+   Ingresa un número: 4
+   4 x 1 = 4
+   4 x 2 = 8
+   ...
+   4 x 10 = 40
+   ```
+
+2. Modificá el mismo programa para que, si el usuario ingresa un número negativo, le vuelva a pedir otro número (usando `do while`).
+
+---
 
