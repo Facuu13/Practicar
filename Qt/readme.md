@@ -15,9 +15,13 @@
 
 ---
 
-## 2) “Hola mundo” con **Qt Widgets** (C++)
+### 🧩 1. `main.cpp`
 
-**main.cpp**
+Es el **programa principal en C++**, donde se define el punto de entrada (`main()`).
+
+Qt es un *framework*, o sea, una gran colección de clases que amplían el lenguaje C++ para construir ventanas, botones, diálogos, etc.
+
+El código era este:
 
 ```cpp
 #include <QApplication>
@@ -35,133 +39,84 @@ int main(int argc, char *argv[]) {
     btn.resize(220, 60);
     btn.show();
 
-    return app.exec(); // event loop
-}
-```
-
-**CMakeLists.txt (Qt 6)**
-
-```cmake
-cmake_minimum_required(VERSION 3.16)
-project(hello_qt_widgets LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_AUTOMOC ON)
-
-find_package(Qt6 6.2 COMPONENTS Widgets REQUIRED)
-
-add_executable(hello_qt_widgets main.cpp)
-target_link_libraries(hello_qt_widgets PRIVATE Qt6::Widgets)
-```
-
-**Cómo compilar (ejemplos)**
-
-* Linux (Debian/Ubuntu): `sudo apt install qt6-base-dev`
-
-  ```
-  mkdir build && cd build
-  cmake ..
-  make
-  ./hello_qt_widgets
-  ```
-* Windows (MinGW): instalar Qt 6 + MinGW desde el instalador de Qt.
-
-  ```
-  mkdir build && cd build
-  cmake -G "MinGW Makefiles" -S .. -B . -DCMAKE_PREFIX_PATH="C:/Qt/6.6.0/mingw_64"
-  mingw32-make
-  .\hello_qt_widgets.exe
-  ```
-
----
-
-## 3) “Hola mundo” con **Qt Quick / QML**
-
-**Idea:** UI declarativa en QML; el motor se arranca desde C++.
-
-**main.cpp**
-
-```cpp
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
-#include <QUrl>
-#include <QObject>
-
-int main(int argc, char *argv[]) {
-    QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
-
-    const QUrl url(u"qrc:/main.qml"_qs);
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject *obj, const QUrl &objUrl) {
-            if (!obj && url == objUrl) QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
-
-    engine.load(url);
     return app.exec();
 }
 ```
 
-**main.qml** (UI)
+#### 🔍 Explicación línea por línea
 
-```qml
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-
-ApplicationWindow {
-    width: 320; height: 200
-    visible: true
-    title: "Hola Qt (QML)"
-
-    Button {
-        anchors.centerIn: parent
-        text: "Saludar"
-        onClicked: text = "¡Hola!"
-    }
-}
-```
-
-**qml.qrc** (recurso para empaquetar QML)
-
-```xml
-<RCC>
-  <qresource prefix="/">
-    <file>main.qml</file>
-  </qresource>
-</RCC>
-```
-
-**CMakeLists.txt (Qt 6 Quick)**
-
-```cmake
-cmake_minimum_required(VERSION 3.16)
-project(hello_qml LANGUAGES CXX)
-
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-find_package(Qt6 6.2 COMPONENTS Quick REQUIRED)
-
-add_executable(hello_qml
-    main.cpp
-    qml.qrc
-)
-target_link_libraries(hello_qml PRIVATE Qt6::Quick)
-```
-
-**Notas rápidas**
-
-* **Widgets** usa `QApplication`. **Quick** usa `QGuiApplication`.
-* En **QML**, el binding es reactivo (cambios de propiedades re-renderizan).
+| Parte                     | Explicación                                                                                                    |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `#include <QApplication>` | Incluye la clase principal que maneja el *event loop* (bucle de eventos). Es necesaria en toda app Qt con GUI. |
+| `#include <QPushButton>`  | Clase que representa un botón con texto.                                                                       |
+| `#include <QMessageBox>`  | Clase que muestra cuadros de diálogo (ventanas emergentes).                                                    |
+| `#include <QObject>`      | Clase base de todos los objetos de Qt; necesaria para signals/slots.                                           |
 
 ---
 
-## 4) Conceptos clave que acabás de usar
+#### 🧠 Dentro del `main()`
 
-* **Event loop**: procesa eventos (clicks, timers, red…). Tu programa “vive” ahí.
-* **Signals/Slots**: *señales* emiten eventos; *slots* reaccionan. En el ejemplo Widgets conectamos `clicked` → lambda.
-* **Parenting**: `QObject` padre gestiona vida de sus hijos (menos `std::unique_ptr`, etc.).
+```cpp
+QApplication app(argc, argv);
+```
+
+* Crea la aplicación Qt.
+* Se encarga de inicializar el entorno gráfico, los eventos del mouse/teclado, etc.
+* `argc, argv` se pasan igual que en cualquier programa C++.
 
 ---
 
+```cpp
+QPushButton btn("Hola Qt (Widgets)");
+```
+
+* Crea un botón con el texto “Hola Qt (Widgets)”.
+* Es un objeto **visible en pantalla** cuando lo mostramos con `show()`.
+
+---
+
+```cpp
+QObject::connect(&btn, &QPushButton::clicked, [&]{
+    QMessageBox::information(&btn, "Qt", "¡Hola desde Qt Widgets!");
+});
+```
+
+* Esto es lo más importante de Qt: la conexión **signal-slot**.
+
+  * El botón emite una *signal* llamada `clicked` cuando se hace clic.
+  * La conectamos con una *lambda* (una función anónima).
+  * Cuando el usuario hace clic → se ejecuta el código que muestra un cuadro de mensaje.
+
+> Qt usa este sistema para manejar eventos sin necesidad de bucles manuales.
+
+---
+
+```cpp
+btn.resize(220, 60);
+btn.show();
+```
+
+* Define el tamaño de la ventana del botón.
+* `show()` lo muestra en pantalla.
+
+---
+
+```cpp
+return app.exec();
+```
+
+* Inicia el **bucle de eventos** (event loop).
+* Qt se queda corriendo, esperando clicks, movimientos, etc.
+* El programa termina cuando el usuario cierra la ventana.
+
+---
+
+✅ En resumen:
+
+1. Se crea la aplicación Qt.
+2. Se crea un botón.
+3. Se conecta la señal de click con una función.
+4. Se muestra el botón.
+5. Se ejecuta el bucle principal (`app.exec()`).
+
+---
