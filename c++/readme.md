@@ -1132,3 +1132,299 @@ La **única diferencia** es que:
    * El **promedio** de edad del grupo.
 
 ---
+
+## 🧩 Módulo 8: Clases y POO
+
+### 🧠 ¿Qué es la Programación Orientada a Objetos?
+
+La **POO (Programación Orientada a Objetos)** es un paradigma que organiza el código en torno a **objetos**, que combinan:
+
+* **Atributos (datos)** → estado del objeto.
+* **Métodos (funciones)** → comportamiento del objeto.
+
+En C++, una **clase** es el “molde” o “plantilla” para crear objetos.
+
+---
+
+### 💡 Sintaxis general
+
+```cpp
+class NombreClase {
+public:
+    // Atributos (variables)
+    // Métodos (funciones)
+
+private:
+    // Atributos o funciones internas
+};
+```
+
+* `public:` → accesible desde fuera de la clase.
+* `private:` → sólo accesible dentro de la clase (encapsulación).
+* Se pueden agregar también secciones `protected:` (útil para herencia).
+
+---
+
+## 💻 Ejemplo 1: clase simple
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Sensor {
+public:
+    std::string nombre;
+    std::string tipo;
+    double valor;
+
+    void mostrar() {
+        std::cout << nombre << " (" << tipo << "): " << valor << std::endl;
+    }
+};
+
+int main() {
+    Sensor s1;
+    s1.nombre = "Sensor de temperatura";
+    s1.tipo = "TEMP";
+    s1.valor = 23.8;
+
+    s1.mostrar();
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `class Sensor` define un nuevo tipo de objeto.
+* Los atributos (`nombre`, `tipo`, `valor`) son **públicos**.
+* El método `mostrar()` imprime la información del sensor.
+
+---
+
+## 💻 Ejemplo 2: encapsulación (atributos privados)
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Sensor {
+private:
+    std::string nombre;
+    double valor;
+
+public:
+    void set_nombre(const std::string &nuevo_nombre) {
+        nombre = nuevo_nombre;
+    }
+
+    void set_valor(double nuevo_valor) {
+        valor = nuevo_valor;
+    }
+
+    std::string get_nombre() const {
+        return nombre;
+    }
+
+    double get_valor() const {
+        return valor;
+    }
+
+    void mostrar() const {
+        std::cout << "Sensor " << nombre << " = " << valor << std::endl;
+    }
+};
+
+int main() {
+    Sensor s1;
+    s1.set_nombre("Temperatura");
+    s1.set_valor(24.5);
+
+    s1.mostrar();
+
+    std::cout << "Nombre desde getter: " << s1.get_nombre() << std::endl;
+    std::cout << "Valor desde getter: " << s1.get_valor() << std::endl;
+
+    return 0;
+}
+```
+
+**Conceptos:**
+
+* Los atributos están en `private` → sólo accesibles mediante **getters** y **setters**.
+* `const` al final de un método significa que **no modifica el objeto**.
+* Esta práctica se llama **encapsulación**, y protege los datos internos.
+
+---
+
+## 💻 Ejemplo 3: constructores
+
+Un **constructor** es una función especial que se llama automáticamente al crear un objeto.
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Sensor {
+private:
+    std::string nombre;
+    double valor;
+
+public:
+    // Constructor
+    Sensor(const std::string &n, double v) {
+        nombre = n;
+        valor = v;
+    }
+
+    void mostrar() const {
+        std::cout << nombre << " = " << valor << std::endl;
+    }
+};
+
+int main() {
+    Sensor s1("Humedad", 60.2);
+    Sensor s2("Temperatura", 23.9);
+
+    s1.mostrar();
+    s2.mostrar();
+
+    return 0;
+}
+```
+
+**Notas:**
+
+* No lleva tipo de retorno (ni `void`).
+* Se llama igual que la clase.
+* Se ejecuta automáticamente al crear el objeto.
+
+---
+
+## 💻 Ejemplo 4: constructor con inicialización moderna
+
+Forma más eficiente y moderna (preferida en C++ moderno):
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Sensor {
+private:
+    std::string nombre;
+    double valor;
+
+public:
+    Sensor(const std::string &n, double v) : nombre(n), valor(v) {}
+
+    void mostrar() const {
+        std::cout << nombre << " = " << valor << std::endl;
+    }
+};
+```
+
+> ✅ Esto se llama **lista de inicialización** y es la mejor práctica para inicializar atributos.
+
+---
+
+## 💻 Ejemplo 5: destructores
+
+Un **destructor** se ejecuta automáticamente cuando un objeto se destruye (al final del programa o al salir de un ámbito).
+
+```cpp
+#include <iostream>
+#include <string>
+
+class Sensor {
+private:
+    std::string nombre;
+
+public:
+    Sensor(const std::string &n) : nombre(n) {
+        std::cout << "Creando sensor: " << nombre << std::endl;
+    }
+
+    ~Sensor() {
+        std::cout << "Destruyendo sensor: " << nombre << std::endl;
+    }
+};
+
+int main() {
+    Sensor s1("Presión");
+    return 0;
+}
+```
+
+**Salida:**
+
+```
+Creando sensor: Presión
+Destruyendo sensor: Presión
+```
+
+---
+
+## 💻 Ejemplo 6: vector de objetos (combinando módulos anteriores)
+
+```cpp
+#include <iostream>
+#include <string>
+#include <vector>
+
+class Sensor {
+private:
+    std::string nombre;
+    double valor;
+
+public:
+    Sensor(const std::string &n, double v) : nombre(n), valor(v) {}
+
+    void mostrar() const {
+        std::cout << nombre << ": " << valor << std::endl;
+    }
+};
+
+int main() {
+    std::vector<Sensor> sensores;
+    sensores.push_back(Sensor("Temperatura", 23.1));
+    sensores.push_back(Sensor("Humedad", 55.0));
+    sensores.push_back(Sensor("Luz", 180.0));
+
+    for (const Sensor &s : sensores) {
+        s.mostrar();
+    }
+
+    return 0;
+}
+```
+
+---
+
+## 💡 Resumen de este módulo
+
+| Concepto          | Descripción                                                    |
+| ----------------- | -------------------------------------------------------------- |
+| **Clase**         | Molde para crear objetos.                                      |
+| **Objeto**        | Instancia concreta de una clase.                               |
+| **Encapsulación** | Ocultar datos internos (atributos privados + getters/setters). |
+| **Constructor**   | Se ejecuta al crear un objeto.                                 |
+| **Destructor**    | Se ejecuta al destruir un objeto.                              |
+| **Métodos**       | Funciones dentro de una clase.                                 |
+
+---
+
+## 💪 Ejercicio propuesto
+
+1. Crea una clase `Empleado` con:
+
+   * Atributos privados: `nombre`, `edad`, `salario`.
+   * Constructor para inicializar esos valores.
+   * Métodos:
+
+     * `mostrar_info()`
+     * `aumentar_salario(double porcentaje)`
+2. En `main()`, creá un vector con tres empleados.
+3. Aumentá el salario del que tenga más de 40 años.
+4. Mostrá la información actualizada de todos.
+
+---
+
