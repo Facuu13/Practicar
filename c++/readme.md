@@ -521,3 +521,190 @@ int main() {
 
 ---
 
+## 🧩 Módulo 5: Funciones
+
+### 🧠 ¿Qué es una función?
+
+Una **función** es un bloque de código que realiza una tarea específica.
+Sirve para **organizar**, **reutilizar** y **mantener** el código más fácilmente.
+
+👉 Pensá en las funciones como “mini programas” dentro de tu programa principal.
+
+---
+
+### 💡 Estructura general
+
+```cpp
+tipo_retorno nombre_función(parámetros) {
+    // cuerpo de la función
+    return valor; // (opcional si el tipo_retorno es void)
+}
+```
+
+* **tipo_retorno**: el tipo de dato que devuelve la función (`int`, `float`, `bool`, `void`, etc.).
+* **nombre_función**: cómo se llama.
+* **parámetros**: datos que la función necesita.
+* **return**: valor que la función devuelve (si no es `void`).
+
+---
+
+### 💻 Ejemplo 1: función que devuelve un valor
+
+```cpp
+#include <iostream>
+
+int sumar(int a, int b) {
+    return a + b;
+}
+
+int main() {
+    int x = 5;
+    int y = 3;
+    int resultado = sumar(x, y);
+
+    std::cout << "La suma es: " << resultado << std::endl;
+
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `sumar` recibe dos enteros y devuelve la suma.
+* En `main`, se llama con `sumar(x, y)`.
+* El valor devuelto se guarda en `resultado`.
+
+---
+
+### 💻 Ejemplo 2: función sin retorno (`void`)
+
+```cpp
+#include <iostream>
+
+void mostrar_mensaje() {
+    std::cout << "Bienvenido al programa de funciones." << std::endl;
+}
+
+int main() {
+    mostrar_mensaje();
+    return 0;
+}
+```
+
+**Explicación:**
+
+* `void` indica que **no devuelve nada**.
+* Sirve para mostrar mensajes o realizar acciones.
+
+---
+
+### 💻 Ejemplo 3: función con parámetros y sin retorno
+
+```cpp
+#include <iostream>
+
+void mostrar_suma(int a, int b) {
+    std::cout << "La suma de " << a << " y " << b << " es " << (a + b) << std::endl;
+}
+
+int main() {
+    mostrar_suma(10, 20);
+    return 0;
+}
+```
+
+---
+
+### 🧩 Funciones con parámetros por valor y por referencia
+
+Por **defecto**, C++ pasa los parámetros **por valor** → se copia el dato.
+Si querés modificar el valor original, usás **referencia (`&`)**.
+
+#### 📘 Ejemplo: paso por valor
+
+```cpp
+#include <iostream>
+
+void duplicar_valor(int n) {
+    n = n * 2;
+}
+
+int main() {
+    int numero = 5;
+    duplicar_valor(numero);
+    std::cout << "Número después de la función: " << numero << std::endl;
+    return 0;
+}
+```
+
+➡️ Salida:
+`Número después de la función: 5`
+(No se modifica el original)
+
+#### 📗 Ejemplo: paso por referencia
+
+```cpp
+#include <iostream>
+
+void duplicar_valor(int &n) {
+    n = n * 2;
+}
+
+int main() {
+    int numero = 5;
+    duplicar_valor(numero);
+    std::cout << "Número después de la función: " << numero << std::endl;
+    return 0;
+}
+```
+
+➡️ Salida:
+`Número después de la función: 10`
+(Ahora sí se modificó el original)
+
+---
+
+### 📘 Importante: declaración y definición
+
+En proyectos grandes, las funciones suelen **declararse antes** del `main()` y **definirse después** (o en otro archivo `.cpp`).
+
+```cpp
+#include <iostream>
+
+// Declaración
+int sumar(int a, int b);
+
+int main() {
+    int resultado = sumar(4, 2);
+    std::cout << "Resultado: " << resultado << std::endl;
+    return 0;
+}
+
+// Definición
+int sumar(int a, int b) {
+    return a + b;
+}
+```
+
+Esto le permite al compilador saber que la función existe antes de ser usada.
+
+---
+
+### 💪 Ejercicio para practicar
+
+1. Crea una función llamada `es_par(int numero)` que devuelva `true` si el número es par y `false` si no lo es.
+2. En `main`, pedile al usuario un número y mostrá un mensaje como:
+
+   ```
+   Ingresa un número: 7
+   El número 7 es impar.
+   ```
+
+👉 Pista:
+Usá el operador módulo `%`:
+
+```cpp
+if (numero % 2 == 0)
+```
+
+---
