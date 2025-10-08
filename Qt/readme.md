@@ -165,22 +165,3 @@ target_link_libraries(hello_qml PRIVATE Qt6::Quick)
 
 ---
 
-## 5) Mini-ejercicios (tu turno)
-
-1. **Widgets**:
-   Crear una ventana con un `QLabel` “Contador: 0” y un `QPushButton` “+1”.
-   Al hacer click, incrementar el contador y actualizar el label.
-   *Tip:* guardá un `int` y usá `label->setText(QString("Contador: %1").arg(n));`.
-
-2. **QML**:
-   Mismo contador: `Text { text: "Contador: 0" }` y `Button { text: "+1" }`.
-   En `onClicked`, aumentá una `property int count` del `ApplicationWindow` y bindéala al `Text`.
-
-3. **Extra**:
-   En Widgets, usá un **layout** (`QVBoxLayout`) para acomodar Label + Button.
-   En QML, centrá los elementos con `anchors` y agregá un `Slider` que cambie el tamaño de fuente del `Text`.
-
-Cuando tengas alguno, pegá el código y lo revisamos juntos.
-
----
-
