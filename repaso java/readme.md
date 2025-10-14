@@ -1188,3 +1188,98 @@ public class Coche {
 ---
 
 
+```java
+
+/******************************************************************************
+
+Gestión de consumo eléctrico doméstico”
+
+Una familia quiere saber cuánto gasta en electricidad en un día.
+Tienen 3 electrodomésticos y de cada uno se conoce:
+El nombre (ej. "Heladera")
+La potencia en watts
+Las horas de uso diario
+
+El programa debe:
+Pedir al usuario esos datos para los 3 electrodomésticos.
+Calcular y mostrar, para cada uno:
+Energía consumida en el día → potencia * horas / 1000 (en kWh)
+Mostrar el total diario (suma de todos).
+Mostrar el costo estimado, sabiendo que 1 kWh cuesta $120.
+
+Ingrese el nombre del electrodoméstico 1: Heladera
+Potencia (W): 200
+Horas de uso por día: 24
+
+Ingrese el nombre del electrodoméstico 2: Televisor
+Potencia (W): 100
+Horas de uso por día: 5
+
+Ingrese el nombre del electrodoméstico 3: Lavarropas
+Potencia (W): 1500
+Horas de uso por día: 1
+
+Consumo de Heladera: 4.8 kWh
+Consumo de Televisor: 0.5 kWh
+Consumo de Lavarropas: 1.5 kWh
+------------------------------
+Consumo total: 6.8 kWh
+Costo estimado diario: $816.0
+
+*******************************************************************************/
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+class Electrodomestico {
+    String nombre;
+    int potencia; // W
+    int horas;    // h/día
+    Electrodomestico(String nombre, int potencia, int horas) {
+        this.nombre = nombre;
+        this.potencia = potencia;
+        this.horas = horas;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        ArrayList<Electrodomestico> electrodomesticos = new ArrayList<>();
+
+        for (int i = 0; i < 3; i++) {
+            System.out.print("Ingrese el nombre del electrodoméstico " + (i + 1) + ": ");
+            String nombre = scanner.nextLine();
+
+            System.out.print("Potencia (W): ");
+            int potencia = scanner.nextInt();
+
+            System.out.print("Horas de uso por día: ");
+            int horas = scanner.nextInt();
+            scanner.nextLine(); // consumir salto de línea pendiente
+
+            electrodomesticos.add(new Electrodomestico(nombre, potencia, horas));
+        }
+
+        double[] consumos = new double[3];
+        double consumoTotal = 0.0;
+        final double TARIFA = 120.0; // $/kWh
+
+        System.out.println();
+        for (int i = 0; i < 3; i++) {
+            Electrodomestico e = electrodomesticos.get(i);
+            consumos[i] = (e.potencia * e.horas) / 1000.0; // kWh
+            consumoTotal += consumos[i];
+            System.out.printf("Consumo de %s: %.2f kWh%n", e.nombre, consumos[i]);
+        }
+
+        System.out.println("------------------------------");
+        System.out.printf("Consumo total: %.2f kWh%n", consumoTotal);
+        System.out.printf("Costo estimado diario: $%.2f%n", consumoTotal * TARIFA);
+
+        scanner.close();
+    }
+}
+
+```java
+
