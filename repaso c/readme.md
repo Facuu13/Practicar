@@ -784,3 +784,87 @@ int buscar_repuesto(struct Repuesto v[], int n, char nombre[]) {
     return -1;
 }
 ```
+---
+```c
+/******************************************************************************
+
+“Control de producción diaria”
+Una fábrica produce diferentes piezas a lo largo del día.
+Cada pieza tiene:
+un ID numérico
+la cantidad producida
+y la cantidad con fallas.
+
+Se pide escribir un programa que:
+Permita ingresar los datos de 5 piezas.
+
+Calcule y muestre:
+El porcentaje de fallas por cada pieza (fallas / cantidad_producida * 100).
+El promedio general de fallas (promedio de los porcentajes).
+Muestre cuál fue la pieza con menor porcentaje de fallas.
+
+Ingrese ID de la pieza 1: 101
+Cantidad producida: 500
+Cantidad con fallas: 25
+
+Ingrese ID de la pieza 2: 102
+Cantidad producida: 400
+Cantidad con fallas: 40
+...
+
+Pieza 101 → 5.00% fallas
+Pieza 102 → 10.00% fallas
+Pieza 103 → 8.75% fallas
+Pieza 104 → 3.33% fallas
+Pieza 105 → 6.00% fallas
+
+Promedio general de fallas: 6.62%
+Menor porcentaje de fallas: pieza 104 (3.33%)
+
+
+*******************************************************************************/
+
+#include <stdio.h>
+
+struct Pieza{
+    int id;
+    int cantidad; 
+    int fallas;
+};
+
+int main()
+{
+    struct Pieza piezas[2];
+    
+    for(int i = 0; i < 2; i++){
+        printf("Ingrese ID de la pieza %d: ",(i+1));
+        scanf("%d", &piezas[i].id);
+        
+        printf("Cantidad producida: ");
+        scanf("%d", &piezas[i].cantidad);
+        
+        printf("Cantidad con fallas: ");
+        scanf("%d", &piezas[i].fallas);
+    }
+    float suma_de_promedio = 0;
+    int id=0;
+    float porc=100.0;
+    for(int i = 0; i < 2; i++){
+        float porce_fallas = ((float)piezas[i].fallas / piezas[i].cantidad) * 100;
+        suma_de_promedio = suma_de_promedio + porce_fallas;
+        if(porce_fallas<porc){
+            porc=porce_fallas;
+            id=piezas[i].id;
+        }
+        printf("Pieza %d: %.2f\n",piezas[i].id,porce_fallas);
+    }
+    
+    float promedio_general = suma_de_promedio / 2;
+    
+    printf("Promedio general de fallas: %.2f%%\n",promedio_general);
+    
+    printf("Menor porcentaje de fallas: pieza %d (%.2f%%)\n",id,porc);
+
+    return 0;
+}
+```
