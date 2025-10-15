@@ -704,3 +704,83 @@ int main()
 }
 ```
 
+```c
+#include <stdio.h>
+#include <string.h>
+
+#define N 5
+
+struct Repuesto {
+    char nombre[30];
+    int cantidad;
+    float precio;
+};
+
+/* --- Prototipos --- */
+void cargar_repuestos(struct Repuesto v[], int n);
+void listar_repuestos(struct Repuesto v[], int n);
+int buscar_repuesto(struct Repuesto v[], int n, char nombre[]);
+
+int main() {
+    struct Repuesto repuestos[N];
+
+    cargar_repuestos(repuestos, N);
+    listar_repuestos(repuestos, N);
+
+    char buscado[30];
+    printf("\nIngrese el nombre del repuesto a buscar: ");
+    scanf("%s", buscado);
+
+    int pos = buscar_repuesto(repuestos, N, buscado);
+    if (pos != -1) {
+        printf("\nRepuesto encontrado:\n");
+        printf("Nombre: %s\nCantidad: %d\nPrecio: $%.2f\n",
+               repuestos[pos].nombre,
+               repuestos[pos].cantidad,
+               repuestos[pos].precio);
+    } else {
+        printf("\nNo se encontró el repuesto '%s'.\n", buscado);
+    }
+
+    return 0;
+}
+
+/* --- Implementaciones --- */
+
+void cargar_repuestos(struct Repuesto v[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("\nRepuesto %d\n", i + 1);
+        printf("Nombre: ");
+        scanf("%s", v[i].nombre);
+
+        printf("Cantidad: ");
+        scanf("%d", &v[i].cantidad);
+
+        printf("Precio: ");
+        scanf("%f", &v[i].precio);
+    }
+}
+
+void listar_repuestos(struct Repuesto v[], int n) {
+    printf("\nListado de repuestos:\n");
+    printf("Nombre\t\tCantidad\tPrecio\t\tValor total\n");
+    printf("----------------------------------------------------\n");
+
+    for (int i = 0; i < n; i++) {
+        float valorTotal = v[i].cantidad * v[i].precio;
+        printf("%-10s\t%5d\t\t$%.2f\t\t$%.2f\n",
+               v[i].nombre,
+               v[i].cantidad,
+               v[i].precio,
+               valorTotal);
+    }
+}
+
+int buscar_repuesto(struct Repuesto v[], int n, char nombre[]) {
+    for (int i = 0; i < n; i++) {
+        if (strcmp(v[i].nombre, nombre) == 0)
+            return i;
+    }
+    return -1;
+}
+```
