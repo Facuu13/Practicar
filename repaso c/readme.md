@@ -868,3 +868,107 @@ int main()
     return 0;
 }
 ```
+---
+```c
+/******************************************************************************
+
+### 🌡️ **Ejercicio 9 — Lenguaje: C**
+
+#### “Lectura de temperatura con ADC (simulada)”
+
+Tenés un sensor **TMP36** conectado a un ADC de **12 bits** (0–4095) con **Vref = 3.3 V**.
+La temperatura se calcula así:
+
+* `V = adc * (Vref / 4095.0)`
+* `T(°C) = (V - 0.5) * 100`   *(fórmula típica del TMP36)*
+
+Pedí al usuario **10 lecturas** de ADC (enteros 0..4095) y:
+
+1. Convertí cada lectura a **voltaje** y **temperatura**.
+2. Considerá **inválidas** las lecturas con `adc == 0` o `adc == 4095` o temperaturas fuera de **[-40, 125] °C**.
+3. Mostrá para las **válidas**: **mínima**, **máxima** y **promedio** (con 2 decimales).
+4. Mostrá cuántas lecturas fueron **inválidas**.
+5. Mostrá cuántas lecturas válidas superaron **30 °C**.
+6. Construí y mostrà un **payload** estilo mensaje (simulando MQTT) con el formato:
+   `temp_avg=XX.XX;valid=V;invalid=I;over30=K`
+
+> Nota: Si **todas** son inválidas, indicá que no se puede calcular min/max/promedio.
+
+---
+
+📘 **Ejemplo de interacción y salida esperada**
+
+
+Ingrese 10 lecturas ADC (0..4095):
+1020 1000 0 980 1200 4095 1100 1080 900 950
+
+Lecturas válidas (°C):
+Lectura 1:  (ADC=1020)  30.70
+Lectura 2:  (ADC=1000)  29.98
+Lectura 4:  (ADC=980)   29.27
+Lectura 5:  (ADC=1200)  36.17
+Lectura 7:  (ADC=1100)  32.67
+Lectura 8:  (ADC=1080)  31.95
+Lectura 9:  (ADC=900)   26.19
+Lectura 10: (ADC=950)   28.08
+
+Mínima: 26.19 °C
+Máxima: 36.17 °C
+Promedio: 30.38 °C
+Inválidas: 2
+Sobre 30 °C: 4
+
+Payload: temp_avg=30.38;valid=8;invalid=2;over30=4
+
+
+*******************************************************************************/
+
+#include <stdio.h>
+
+int main()
+{
+    int lecturas[10];
+    float vref = 3.3;
+    float suma=0;
+    float temp_min= 9999.0;
+    float temp_max=0;
+    int validas=0;
+    int validas_mas_treinta=0;
+    char payload[100];
+    printf("Ingrese 10 lecturas ADC (0..4095): ");
+    for (int i = 0; i < 10; i++) {
+        scanf("%d", &lecturas[i]);
+        
+    }
+    
+    printf("Lecturas Validas (°C): \n");
+    for (int i = 0; i < 10; i++) {
+        if (lecturas[i] > 0 && lecturas[i]<4095){
+            float v = lecturas[i]*vref/4095;
+            float temp = (v-0.5)*100;
+            suma = suma +temp;
+            validas +=1;
+            if (temp > 30){
+                validas_mas_treinta +=1;
+            }
+            if (temp > temp_max){
+                temp_max = temp;
+            }
+            if (temp < temp_min) {
+                temp_min = temp;
+            }
+            printf("Lectura valida %d: (ADC=%d) %.2f\n", i+1, lecturas[i],temp);
+            
+        }
+        
+    }
+    printf("Maxima: %.2f °C\n",temp_max);
+    printf("Minimo: %.2f °C\n",temp_min);
+    printf("Promedio: %.2f °C\n",(suma/validas));
+    printf("Invalidas: %d\n",10-validas);
+    printf("Sobre 30 °C: %d\n",validas_mas_treinta);
+    sprintf(payload, "temp_avg=%.2f;valid=%d;invalid=%d;over30=%d", (suma/validas),validas,10-validas,validas_mas_treinta);
+    printf("Payload: %s\n", payload);
+    return 0;
+}
+```
